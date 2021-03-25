@@ -1,0 +1,1 @@
+CREATE TABLE users (id VARCHAR(32) NOT NULL, characters TEXT NOT NULL, hasClaimed BOOLEAN NOT NULL DEFAULT true, primary key(id));
