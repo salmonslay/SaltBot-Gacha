@@ -19,6 +19,7 @@ connection = mysql2.createConnection({
 
 characters = [];
 claimedIds = [];
+haremCache = [];
 
 connection.connect(function (e) {
     if (e) {
@@ -65,25 +66,31 @@ bot.on("ready", () => {
 bot.on('messageReactionAdd', (reaction, user) => {
     if (user.bot) return;
     var message = reaction.message;
-
-
     if (message.author.id == bot.user.id && Date.now() - message.createdTimestamp < 60000 && message.embeds) {
-        var regex = /http:\/\/(\d+)\.com/;
-        var claimedId = (message.embeds[0].thumbnail.url.match(regex) || []).map(e => e.replace(regex, '$1'))[0];
-        var claimedName = message.embeds[0].description;
-        if (!claimedIds.includes(claimedId)) {
+        var embed = message.embeds[0];
+        if(embed.color == 15844367) processMessage_claim(message, user, embed)
 
-            connection.query(`SELECT hasClaimed,characters FROM users WHERE id = '${user.id}'`, function (err, result) {
-                if (err) throw err;
-                else {
-                    if (result.length == 0) tryClaim(user, claimedId, claimedName, "[]", message.channel);
-                    else if (result[0].hasClaimed == 0) tryClaim(user, claimedId, claimedName, result[0].characters, message.channel);
-                    else message.channel.send(`${user.toString()}, you have already claimed!`)
-                }
-            });
-        }
+        
     }
 });
+
+
+function processMessage_claim(message, user, embed){
+    var regex = /http:\/\/(\d+)\.com/;
+    var claimedId = (embed.thumbnail.url.match(regex) || []).map(e => e.replace(regex, '$1'))[0];
+    var claimedName = embed.title;
+    if (!claimedIds.includes(claimedId)) {
+
+        connection.query(`SELECT hasClaimed,characters FROM users WHERE id = '${user.id}'`, function (err, result) {
+            if (err) throw err;
+            else {
+                if (result.length == 0) tryClaim(user, claimedId, claimedName, "[]", message.channel);
+                else if (result[0].hasClaimed == 0) tryClaim(user, claimedId, claimedName, result[0].characters, message.channel);
+                else message.channel.send(`${user.toString()}, you have already claimed someone this hour!`)
+            }
+        });
+    }
+}
 
 function tryClaim(user, characterID, characterName, myCharacters, channel) {
     if (!claimedIds.includes(characterID)) {
@@ -93,7 +100,6 @@ function tryClaim(user, characterID, characterName, myCharacters, channel) {
         charArray.push([characterID, characterName]);
 
         var query =`INSERT INTO users VALUES (${user.id}, '${JSON.stringify(charArray)}', 1) ON DUPLICATE KEY UPDATE characters = '${JSON.stringify(charArray)}', hasClaimed = 1;`;
-        console.log(query);
         connection.query(query, function (err, result) {
             if (err) throw err;
             else {
