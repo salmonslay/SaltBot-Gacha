@@ -6,7 +6,7 @@ module.exports.run = async (bot, message, args) => {
     var character = characters[Math.floor(Math.random() * characters.length)];
 
     var characterEmbed = new Discord.RichEmbed()
-        .setColor("#FFFFFF")
+        .setColor("GOLD")
         .setTitle(character.parsedName)
         .setDescription(character.source)
         .setImage(character.largeImage)

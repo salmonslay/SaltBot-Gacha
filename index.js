@@ -27,7 +27,7 @@ connection.connect(function (e) {
     }
 
     console.log(`\nConnected to MySQL (${process.env.mysql_database})\n`);
-    connection.query(`SELECT id,parsedName,largeImage,source FROM characters WHERE likes = 1`, function (err, result) {
+    connection.query(`SELECT id,parsedName,largeImage,source FROM characters`, function (err, result) {
         if (err) throw err;
         else {
             characters = result;
@@ -66,14 +66,41 @@ bot.on("ready", () => {
 bot.on('messageReactionAdd', (reaction, user) => {
     if (user.bot) return;
     var message = reaction.message;
+   
     if (message.author.id == bot.user.id && Date.now() - message.createdTimestamp < 60000 && message.embeds) {
         var embed = message.embeds[0];
+
+        //r
         if(embed.color == 15844367) processMessage_claim(message, user, embed)
+
+        //mm
+        if(embed.color == 10038562) processMessage_harem(message, user, embed, reaction)
 
         
     }
 });
 
+function processMessage_harem(message, user, embed, reaction){
+    var regex= /http:\/\/s\.se\/(\d+)\/(\d+)/;
+    var data = (embed.thumbnail.url.match(regex) || []).map(e => e.replace(regex, '$1'));
+    var userID = data[1];
+    var currentPage = data[2];
+    var characters = haremCache[userID];
+
+    if(reaction._emoji.name == "⬅️") currentPage--;
+    else if(reaction._emoji.name = "➡️") currentPage++;
+
+    if(currentPage == -1) currentPage = characters.length-1;
+    else if(currentPage == characters.length) currentPage = 0;
+
+    var newEmbed = new Discord.RichEmbed()
+    .setColor("DARK_RED")
+    .setTitle(embed.title)
+    .setDescription(characters[currentPage])
+    .setThumbnail(`http://s.se/${user.id}/${currentPage}`)
+
+    message.edit(newEmbed)
+}
 
 function processMessage_claim(message, user, embed){
     var regex = /http:\/\/(\d+)\.com/;
