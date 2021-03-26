@@ -67,7 +67,7 @@ bot.on('messageReactionAdd', (reaction, user) => {
     var message = reaction.message;
 
 
-    if (message.author.id == bot.user.id && Date.now() - message.createdTimestamp < 5000 && message.embeds) {
+    if (message.author.id == bot.user.id && Date.now() - message.createdTimestamp < 60000 && message.embeds) {
         var regex = /http:\/\/(\d+)\.com/;
         var claimedId = (message.embeds[0].thumbnail.url.match(regex) || []).map(e => e.replace(regex, '$1'))[0];
         var claimedName = message.embeds[0].description;
