@@ -1,8 +1,5 @@
 var Discord = require("discord.js");
 var config = require("../config.json");
-const filter = (reaction, user) => {
-    return true;
-};
 
 module.exports.run = async (bot, message, args) => {
 
@@ -16,7 +13,7 @@ module.exports.run = async (bot, message, args) => {
         .setThumbnail(`http://${character.id}.com`)
 
     message.channel.send(characterEmbed).then(msg => {
-        msg.react('🦍');
+        msg.react('🧂');
     })
 }
 
