@@ -17,12 +17,21 @@ connection = mysql2.createConnection({
     database: process.env.mysql_database
 });
 
+characters = [];
+
 connection.connect(function (e) {
     if (e) {
         return console.error('error: ' + e.message);
     }
 
     console.log(`\nConnected to MySQL (${process.env.mysql_database})\n`);
+    connection.query(`SELECT id,parsedName,largeImage,source FROM characters WHERE likes = 1`, function (err, result) {
+        if (err) throw err;
+        else {
+            characters = result;
+            console.log(`Character list loaded. Found ${result.length} entries.`)
+        }
+    });
 });
 
 //Read commands
@@ -44,6 +53,7 @@ fs.readdir("./commands/", (err, files) => {
 
 //Bot started
 bot.on("ready", () => {
+    console.log(`${bot.user.username}Gacha is now online on ${bot.guilds.size} servers!`)
     if (bot.user.username == "SaltDev") {
         bot.channels.get("556801338550386688").send(`${bot.user.username}Gacha is now online on ${bot.guilds.size} servers!`)
     } else {
