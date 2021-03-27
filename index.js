@@ -145,11 +145,19 @@ function tryClaim(user, characterID, characterName, myCharacters, message, embed
 
         var query = `INSERT INTO users VALUES (${user.id}, ${connection.escape(user.username)}, '${JSON.stringify(charArray)}', 1) 
         ON DUPLICATE KEY UPDATE username = ${connection.escape(user.username)}, characters = '${JSON.stringify(charArray)}', hasClaimed = 1;`;
-        console.log(query)
         connection.query(query, function (err, result) {
             if (err) throw err;
             else {
                 console.log(`${user.username} claimed ${characterName}`)
+                const newEmbed = new Discord.RichEmbed()
+                .setColor("DARK_RED")
+                .setTitle(embed.title)
+                .setDescription(embed.description)
+                .setImage(embed.image.url)
+                .setThumbnail(embed.thumbnail.url)
+                .setFooter(`Belongs to ${user.username}`, user.avatarURL)
+
+    message.edit(newEmbed)
             }
         });
     }
