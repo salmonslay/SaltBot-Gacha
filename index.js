@@ -93,10 +93,11 @@ bot.on('messageReactionRemove', (reaction, user) => {
 });
 
 function processMessage_harem(message, user, embed, reaction) {
-    var regex = /http:\/\/s\.se\/(\d+)\/(\d+)/;
+    var regex = /jpg#(\d+)#(\d+)/;
     var data = (embed.thumbnail.url.match(regex) || []).map(e => e.replace(regex, '$1'));
     var userID = data[1];
     var currentPage = data[2];
+    var oldPage = currentPage;
     var characters = haremCache[userID];
 
     if (reaction._emoji.name == "⬅️") currentPage--;
@@ -110,7 +111,7 @@ function processMessage_harem(message, user, embed, reaction) {
         .setTitle(embed.title)
         .setDescription(characters[currentPage])
         .setFooter(`Page ${currentPage+1}/${characters.length}`)
-        .setThumbnail(`http://s.se/${userID}/${currentPage}`)
+        .setThumbnail(embed.thumbnail.url.replace(`${userID}#${oldPage}`, `${userID}#${currentPage}`))
 
     message.edit(newEmbed)
 }

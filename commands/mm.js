@@ -13,24 +13,26 @@ module.exports.run = async (bot, message, args) => {
                 for (var i = 0; i < myCharacters.length; i++) {
                     if (fixedCharacters.length == (i - (i % 15)) / 15) fixedCharacters.push([]);
                     fixedCharacters[(i - (i % 15)) / 15].push(myCharacters[i][1]);
-                    console.log(myCharacters[i][1])
                 }
                 haremCache[target.id] = fixedCharacters;
-
-                createEmbed(target, fixedCharacters[0], message, fixedCharacters,0);
+                connection.query(`SELECT largeImage FROM characters WHERE id = '${myCharacters[0][0]}'`, function (err, result2) {
+                    if (err) throw err;
+                    else {
+                        createEmbed(target, fixedCharacters[0], message, fixedCharacters, result2[0].largeImage);
+                }})
+                
             } else {
-                createEmbed(target, ["*So empty ~*"], message, fixedCharacters,0);
+                createEmbed(target, ["*So empty ~*"], message, fixedCharacters,"https://i.imgur.com/ILbATq4.jpg");
             }
         }
     });
 }
 
-function createEmbed(user, data, message, fixedCharacters, page) {
     var characterEmbed = new Discord.RichEmbed()
         .setColor("DARK_RED")
         .setTitle(`${user.username}'s harem`)
         .setDescription(data)
-        .setThumbnail(`http://s.se/${user.id}/0`)
+        .setThumbnail(`${link}#${user.id}#0`)
         .setFooter(`Page 1/${fixedCharacters.length}`)
     message.channel.send(characterEmbed).then(msg => {
         if (fixedCharacters.length > 1) msg.react("⬅️").then(() => msg.react("➡️"))
