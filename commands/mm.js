@@ -28,6 +28,7 @@ module.exports.run = async (bot, message, args) => {
     });
 }
 
+function createEmbed(user, data, message, fixedCharacters, link) {
     var characterEmbed = new Discord.RichEmbed()
         .setColor("DARK_RED")
         .setTitle(`${user.username}'s harem`)
