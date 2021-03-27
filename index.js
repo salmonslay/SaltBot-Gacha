@@ -27,7 +27,7 @@ connection.connect(function (e) {
     }
 
     console.log(`\nConnected to MySQL (${process.env.mysql_database})\n`);
-    connection.query(`SELECT id,parsedName,largeImage,source FROM characters`, function (err, result) {
+    connection.query(`SELECT id,parsedName,largeImage,source FROM characters LIMIT 100`, function (err, result) {
         if (err) throw err;
         else {
             characters = result;
@@ -66,43 +66,56 @@ bot.on("ready", () => {
 bot.on('messageReactionAdd', (reaction, user) => {
     if (user.bot) return;
     var message = reaction.message;
-   
-    if (message.author.id == bot.user.id && Date.now() - message.createdTimestamp < 60000 && message.embeds) {
+    var time = Date.now() - message.createdTimestamp;
+
+    if (message.author.id == bot.user.id && time < 180000 && message.embeds) {
         var embed = message.embeds[0];
 
         //r
-        if(embed.color == 15844367) processMessage_claim(message, user, embed)
+        if (embed.color == 15844367 && time < 60000) processMessage_claim(message, user, embed)
 
         //mm
-        if(embed.color == 10038562) processMessage_harem(message, user, embed, reaction)
-
-        
+        if (embed.color == 10038562) processMessage_harem(message, user, embed, reaction)
     }
 });
 
-function processMessage_harem(message, user, embed, reaction){
-    var regex= /http:\/\/s\.se\/(\d+)\/(\d+)/;
+bot.on('messageReactionRemove', (reaction, user) => {
+    if (user.bot) return;
+    var message = reaction.message;
+    var time = Date.now() - message.createdTimestamp;
+
+    if (message.author.id == bot.user.id && time < 180000 && message.embeds) {
+        var embed = message.embeds[0];
+
+        //mm
+        if (embed.color == 10038562) processMessage_harem(message, user, embed, reaction);
+    }
+});
+
+function processMessage_harem(message, user, embed, reaction) {
+    var regex = /http:\/\/s\.se\/(\d+)\/(\d+)/;
     var data = (embed.thumbnail.url.match(regex) || []).map(e => e.replace(regex, '$1'));
     var userID = data[1];
     var currentPage = data[2];
     var characters = haremCache[userID];
 
-    if(reaction._emoji.name == "⬅️") currentPage--;
-    else if(reaction._emoji.name = "➡️") currentPage++;
+    if (reaction._emoji.name == "⬅️") currentPage--;
+    else if (reaction._emoji.name = "➡️") currentPage++;
 
-    if(currentPage == -1) currentPage = characters.length-1;
-    else if(currentPage == characters.length) currentPage = 0;
+    if (currentPage == -1) currentPage = characters.length-1;
+    else if (currentPage == characters.length) currentPage = 0;
 
     var newEmbed = new Discord.RichEmbed()
-    .setColor("DARK_RED")
-    .setTitle(embed.title)
-    .setDescription(characters[currentPage])
-    .setThumbnail(`http://s.se/${userID}/${currentPage}`)
+        .setColor("DARK_RED")
+        .setTitle(embed.title)
+        .setDescription(characters[currentPage])
+        .setFooter(`Page ${currentPage+1}/${characters.length}`)
+        .setThumbnail(`http://s.se/${userID}/${currentPage}`)
 
     message.edit(newEmbed)
 }
 
-function processMessage_claim(message, user, embed){
+function processMessage_claim(message, user, embed) {
     var regex = /http:\/\/(\d+)\.com/;
     var claimedId = (embed.thumbnail.url.match(regex) || []).map(e => e.replace(regex, '$1'))[0];
     var claimedName = embed.title;
@@ -123,18 +136,18 @@ function tryClaim(user, characterID, characterName, myCharacters, message, embed
     if (!claimedIds.includes(characterID)) {
         claimedIds.push(characterID);
         message.channel.send(`**${user.username}** claimed **${characterName}**`);
-        
+
 
         var charArray = JSON.parse(myCharacters);
         charArray.push([characterID, characterName]);
 
-        var query =`INSERT INTO users VALUES (${user.id}, '${JSON.stringify(charArray)}', 1) ON DUPLICATE KEY UPDATE characters = '${JSON.stringify(charArray)}', hasClaimed = 1;`;
+        var query = `INSERT INTO users VALUES (${user.id}, '${JSON.stringify(charArray)}', 1) ON DUPLICATE KEY UPDATE characters = '${JSON.stringify(charArray)}', hasClaimed = 1;`;
         connection.query(query, function (err, result) {
             if (err) throw err;
             else {
                 console.log(`${user.username} claimed ${characterName}`)
-                
-                
+
+
 
             }
         });

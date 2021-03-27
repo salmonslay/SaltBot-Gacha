@@ -17,16 +17,12 @@ module.exports.run = async (bot, message, args) => {
                 }
                 haremCache[target.id] = fixedCharacters;
 
-                var chars = "";
-                fixedCharacters[0].forEach(entry => chars += `${entry}\n`);
-                createEmbed(target, chars, message, fixedCharacters,0);
+                createEmbed(target, fixedCharacters[0], message, fixedCharacters,0);
             } else {
                 createEmbed(target, ["*So empty ~*"], message, fixedCharacters,0);
             }
         }
     });
-
-
 }
 
 function createEmbed(user, data, message, fixedCharacters, page) {
@@ -35,6 +31,7 @@ function createEmbed(user, data, message, fixedCharacters, page) {
         .setTitle(`${user.username}'s harem`)
         .setDescription(data)
         .setThumbnail(`http://s.se/${user.id}/0`)
+        .setFooter(`Page 1/${fixedCharacters.length}`)
     message.channel.send(characterEmbed).then(msg => {
         if (fixedCharacters.length > 1) msg.react("⬅️").then(() => msg.react("➡️"))
     })
