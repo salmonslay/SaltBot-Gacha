@@ -117,7 +117,7 @@ function processMessage_harem(message, user, embed, reaction) {
 }
 
 function processMessage_claim(message, user, embed) {
-    var regex = /http:\/\/(\d+)\.com/;
+    var regex = /http:\/\/example\.com\/(\d+)/;
     var claimedId = (embed.thumbnail.url.match(regex) || []).map(e => e.replace(regex, '$1'))[0];
     var claimedName = embed.title;
     if (!claimedIds.includes(claimedId)) {
@@ -149,9 +149,6 @@ function tryClaim(user, characterID, characterName, myCharacters, message, embed
             if (err) throw err;
             else {
                 console.log(`${user.username} claimed ${characterName}`)
-
-
-
             }
         });
     }

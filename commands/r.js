@@ -10,7 +10,7 @@ module.exports.run = async (bot, message, args) => {
         .setTitle(character.parsedName)
         .setDescription(character.source)
         .setImage(character.largeImage)
-        .setThumbnail(`http://${character.id}.com`)
+        .setThumbnail(`http://example.com/${character.id}`)
 
     message.channel.send(characterEmbed).then(msg => {
         msg.react('🧂');
