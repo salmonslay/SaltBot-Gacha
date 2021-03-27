@@ -97,7 +97,7 @@ function processMessage_harem(message, user, embed, reaction){
     .setColor("DARK_RED")
     .setTitle(embed.title)
     .setDescription(characters[currentPage])
-    .setThumbnail(`http://s.se/${user.id}/${currentPage}`)
+    .setThumbnail(`http://s.se/${userID}/${currentPage}`)
 
     message.edit(newEmbed)
 }
@@ -111,18 +111,20 @@ function processMessage_claim(message, user, embed){
         connection.query(`SELECT hasClaimed,characters FROM users WHERE id = '${user.id}'`, function (err, result) {
             if (err) throw err;
             else {
-                if (result.length == 0) tryClaim(user, claimedId, claimedName, "[]", message.channel);
-                else if (result[0].hasClaimed == 0) tryClaim(user, claimedId, claimedName, result[0].characters, message.channel);
+                if (result.length == 0) tryClaim(user, claimedId, claimedName, "[]", message, embed);
+                else if (result[0].hasClaimed == 0) tryClaim(user, claimedId, claimedName, result[0].characters, message, embed);
                 else message.channel.send(`${user.toString()}, you have already claimed someone this hour!`)
             }
         });
     }
 }
 
-function tryClaim(user, characterID, characterName, myCharacters, channel) {
+function tryClaim(user, characterID, characterName, myCharacters, message, embed) {
     if (!claimedIds.includes(characterID)) {
         claimedIds.push(characterID);
-        channel.send(`**${user.username}** claimed **${characterName}**`);
+        message.channel.send(`**${user.username}** claimed **${characterName}**`);
+        
+
         var charArray = JSON.parse(myCharacters);
         charArray.push([characterID, characterName]);
 
@@ -131,6 +133,9 @@ function tryClaim(user, characterID, characterName, myCharacters, channel) {
             if (err) throw err;
             else {
                 console.log(`${user.username} claimed ${characterName}`)
+                
+                
+
             }
         });
     }
