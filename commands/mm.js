@@ -41,5 +41,5 @@ function createEmbed(user, data, message, fixedCharacters, link) {
 }
 
 module.exports.help = {
-    name: "mm"
+    name: ["mm", "harem", "characters", "mycharacters"]
 }

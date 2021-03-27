@@ -18,5 +18,5 @@ module.exports.run = async (bot, message, args) => {
 }
 
 module.exports.help = {
-    name: "r"
+    name: ["r", "roll", "ma", "m"]
 }
