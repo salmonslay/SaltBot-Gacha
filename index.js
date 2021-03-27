@@ -142,7 +142,9 @@ function tryClaim(user, characterID, characterName, myCharacters, message, embed
         var charArray = JSON.parse(myCharacters);
         charArray.push([characterID, characterName]);
 
-        var query = `INSERT INTO users VALUES (${user.id}, '${JSON.stringify(charArray)}', 1) ON DUPLICATE KEY UPDATE characters = '${JSON.stringify(charArray)}', hasClaimed = 1;`;
+        var query = `INSERT INTO users VALUES (${user.id}, ${connection.escape(user.username)}, '${JSON.stringify(charArray)}', 1) 
+        ON DUPLICATE KEY UPDATE username = ${connection.escape(user.username)}, characters = '${JSON.stringify(charArray)}', hasClaimed = 1;`;
+        console.log(query)
         connection.query(query, function (err, result) {
             if (err) throw err;
             else {

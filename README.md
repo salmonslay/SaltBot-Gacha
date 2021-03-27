@@ -1,1 +1,1 @@
-CREATE TABLE users (id VARCHAR(32) NOT NULL, characters TEXT NOT NULL, hasClaimed BOOLEAN NOT NULL DEFAULT false, primary key(id));
+CREATE TABLE users (id VARCHAR(32) NOT NULL, username TEXT NOT NULL, characters TEXT NOT NULL, hasClaimed BOOLEAN NOT NULL DEFAULT false, primary key(id));
