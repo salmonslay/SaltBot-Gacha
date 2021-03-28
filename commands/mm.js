@@ -8,14 +8,17 @@ module.exports.run = async (bot, message, args) => {
     connection.query(`SELECT characters FROM users WHERE id = '${target.id}'`, function (err, result) {
         if (err) throw err;
         else {
-            if (result.length>0) {
+            if (result.length>0 && result[0].characters != "[]") {
                 var myCharacters = JSON.parse(result[0].characters);
                 for (var i = 0; i < myCharacters.length; i++) {
                     if (fixedCharacters.length == (i - (i % 15)) / 15) fixedCharacters.push([]);
-                    fixedCharacters[(i - (i % 15)) / 15].push(myCharacters[i][1]);
+                    fixedCharacters[(i - (i % 15)) / 15].push(`**x${myCharacters[i].amount}** ${myCharacters[i].name}`);
                 }
                 haremCache[target.id] = fixedCharacters;
-                connection.query(`SELECT largeImage FROM characters WHERE id = '${myCharacters[0][0]}'`, function (err, result2) {
+                
+
+                console.log(myCharacters)
+                connection.query(`SELECT largeImage FROM characters WHERE id = '${myCharacters[0].id}'`, function (err, result2) {
                     if (err) throw err;
                     else {
                         createEmbed(target, fixedCharacters[0], message, fixedCharacters, result2[0].largeImage);
