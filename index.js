@@ -27,7 +27,7 @@ connection.connect(function (e) {
     }
 
     console.log(`\nConnected to MySQL (${process.env.mysql_database})\n`);
-    connection.query(`SELECT id,parsedName,largeImage,source FROM characters LIMIT 5`, function (err, result) {
+    connection.query(`SELECT id,parsedName,largeImage,source FROM characters LIMIT 50`, function (err, result) {
         if (err) throw err;
         else {
             characters = result;
@@ -50,7 +50,7 @@ fs.readdir("./commands/", (err, files) => {
         let props = require(`./commands/${f}`)
         console.log(`File ${f} loaded!`);
         props.help.name.forEach(name => bot.commands.set(name, props))
-        
+
     });
 })
 
@@ -65,7 +65,6 @@ bot.on("ready", () => {
 });
 
 bot.on('messageReactionAdd', (reaction, user) => {
-    console.log(user.username + " reacted")
     if (user.bot) return;
     var message = reaction.message;
     var time = Date.now() - message.createdTimestamp;
@@ -74,10 +73,10 @@ bot.on('messageReactionAdd', (reaction, user) => {
         var embed = message.embeds[0];
 
         //r
-        if (embed.color == 15844367 && time < 60000) processMessage_claim(message, user, embed)
+        if (embed.color == 15844367 && time < 60000) bot.commands.get("roll").processClaim(message, user, embed, reaction)
 
-        //mm
-        if (embed.color == 10038562) processMessage_harem(message, user, embed, reaction)
+        //update harem (mm)
+        if (embed.color == 10038562) bot.commands.get("harem").updatePage(message, user, embed, reaction)
     }
 });
 
@@ -89,89 +88,10 @@ bot.on('messageReactionRemove', (reaction, user) => {
     if (message.author.id == bot.user.id && time < 180000 && message.embeds) {
         var embed = message.embeds[0];
 
-        //mm
-        if (embed.color == 10038562) processMessage_harem(message, user, embed, reaction);
+        //update harem (mm)
+        if (embed.color == 10038562) bot.commands.get("harem").updatePage(message, user, embed, reaction)
     }
 });
-
-function processMessage_harem(message, user, embed, reaction) {
-    var regex = /jpg#(\d+)#(\d+)/;
-    var data = (embed.thumbnail.url.match(regex) || []).map(e => e.replace(regex, '$1'));
-    var userID = data[1];
-    var currentPage = data[2];
-    var oldPage = currentPage;
-    var characters = haremCache[userID];
-
-    if (reaction._emoji.name == "⬅️") currentPage--;
-    else if (reaction._emoji.name = "➡️") currentPage++;
-
-    if (currentPage == -1) currentPage = characters.length-1;
-    else if (currentPage == characters.length) currentPage = 0;
-
-    var newEmbed = new Discord.RichEmbed()
-        .setColor("DARK_RED")
-        .setTitle(embed.title)
-        .setDescription(characters[currentPage])
-        .setFooter(`Page ${currentPage+1}/${characters.length}`)
-        .setThumbnail(embed.thumbnail.url.replace(`${userID}#${oldPage}`, `${userID}#${currentPage}`))
-
-    message.edit(newEmbed)
-}
-
-function processMessage_claim(message, user, embed) {
-    var regex = /http:\/\/example\.com\/(\d+)/;
-    var claimedId = (embed.thumbnail.url.match(regex) || []).map(e => e.replace(regex, '$1'))[0];
-    var claimedName = embed.title;
-    if (!claimedIds.includes(message.id)) {
-
-        connection.query(`SELECT hasClaimed,characters FROM users WHERE id = '${user.id}'`, function (err, result) {
-            if (err) throw err;
-            else {
-                if (result.length == 0) tryClaim(user, claimedId, claimedName, "[]", message, embed);
-                else if (result[0].hasClaimed == 0) tryClaim(user, claimedId, claimedName, result[0].characters, message, embed);
-                else message.channel.send(`${user.toString()}, you have already claimed someone this hour!`)
-            }
-        });
-    }
-}
-
-function tryClaim(user, characterID, characterName, myCharacters, message, embed) {
-    if (!claimedIds.includes(message.id)) {
-        claimedIds.push(message.id);
-
-        message.channel.send(`**${user.username}** claimed **${characterName}**`);
-
-
-        var charArray = JSON.parse(myCharacters);
-        var updated = false;
-        for(var i = 0; i < charArray.length; i++){
-            if(charArray[i].id == characterID){
-                charArray[i].amount++;
-                updated =true;
-                break;
-            }
-        }
-        if(!updated) charArray.push( {"amount": 1, "id": characterID, "name": characterName})
-
-        var query = `INSERT INTO users VALUES (${user.id}, ${connection.escape(user.username)}, '${JSON.stringify(charArray)}', 1) 
-        ON DUPLICATE KEY UPDATE username = ${connection.escape(user.username)}, characters = '${JSON.stringify(charArray)}', hasClaimed = 1;`;
-        connection.query(query, function (err, result) {
-            if (err) throw err;
-            else {
-                console.log(`${user.username} claimed ${characterName}`)
-                const newEmbed = new Discord.RichEmbed()
-                .setColor("#3D0000")
-                .setTitle(embed.title)
-                .setDescription(embed.description)
-                .setImage(embed.image.url)
-                .setThumbnail(embed.thumbnail.url)
-                .setFooter(`Belongs to ${user.username}`, user.avatarURL)
-
-    message.edit(newEmbed)
-            }
-        });
-    }
-}
 
 //Command detection
 bot.on("message", message => {
