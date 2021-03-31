@@ -41,6 +41,7 @@ function createEmbed(user, data, message, fixedCharacters, link) {
         .setFooter(`Page 1/${fixedCharacters.length}`)
     message.channel.send(characterEmbed).then(msg => {
         if (fixedCharacters.length > 1) msg.react("⬅️").then(() => msg.react("➡️"))
+        messageInfo[msg.id.toString()] = "mm";
     })
 }
 

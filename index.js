@@ -17,9 +17,18 @@ connection = mysql2.createConnection({
     database: process.env.mysql_database
 });
 
+//characters
 characters = [];
+characterMap = [];
+
+//roll messages that are claimed
 claimedIds = [];
+
+//saves an users harem
 haremCache = [];
+
+//Holds info about what a message is doing
+messageInfo = [];
 
 connection.connect(function (e) {
     if (e) {
@@ -27,10 +36,21 @@ connection.connect(function (e) {
     }
 
     console.log(`\nConnected to MySQL (${process.env.mysql_database})\n`);
-    connection.query(`SELECT id,parsedName,largeImage,source FROM characters LIMIT 50`, function (err, result) {
+    connection.query(`SELECT id,parsedName,largeImage,source FROM characters ORDER BY likeRank ASC LIMIT 20000`, function (err, result) {
         if (err) throw err;
         else {
-            characters = result;
+            result.forEach(char => {
+                if (!characterMap[char.id.toString()]) {
+                    characters.push(char);
+
+                    characterMap.push({
+                        id: char.id,
+                        name: char.parsedName,
+                        image: char.largeImage,
+                        source: char.souce
+                    })
+                }
+            })
             console.log(`Character list loaded. Found ${result.length} entries.`)
         }
     });
@@ -73,10 +93,10 @@ bot.on('messageReactionAdd', (reaction, user) => {
         var embed = message.embeds[0];
 
         //r
-        if (embed.color == 15844367 && time < 60000) bot.commands.get("roll").processClaim(message, user, embed, reaction)
+        if (messageInfo[message.id.toString()] == "roll" && time < 60000) bot.commands.get("roll").processClaim(message, user, embed, reaction)
 
         //update harem (mm)
-        if (embed.color == 10038562) bot.commands.get("harem").updatePage(message, user, embed, reaction)
+        if (messageInfo[message.id.toString()] == "mm") bot.commands.get("harem").updatePage(message, user, embed, reaction)
     }
 });
 
@@ -89,7 +109,7 @@ bot.on('messageReactionRemove', (reaction, user) => {
         var embed = message.embeds[0];
 
         //update harem (mm)
-        if (embed.color == 10038562) bot.commands.get("harem").updatePage(message, user, embed, reaction)
+        if (messageInfo[message.id.toString()] == "mm") bot.commands.get("harem").updatePage(message, user, embed, reaction)
     }
 });
 
