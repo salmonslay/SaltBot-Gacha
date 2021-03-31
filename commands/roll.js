@@ -11,9 +11,10 @@ module.exports.run = async (bot, message, args) => {
         .setDescription(character.source)
         .setImage(character.largeImage)
         .setThumbnail(`http://example.com/${character.id}`)
+        .setFooter("React to claim!")
 
     message.channel.send(characterEmbed).then(msg => {
-        msg.react('🧂');
+        //msg.react('🧂');
         messageInfo[msg.id.toString()] = "roll";
     })
 }
