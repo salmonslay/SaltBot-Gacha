@@ -2,7 +2,33 @@ var Discord = require("discord.js");
 var config = require("../config.json");
 
 module.exports.run = async (bot, message, args) => {
+    var id = message.author.id.toString();
+    var date = new Date();
+    var thisInterval = `${date.getDay()}-${date.getHours()}`;
 
+    //user exists in cache
+    if (userCache[id]) {
+        //reset rolls if user haven't rolled this hour
+        if (userCache[id].lastInterval != thisInterval) userCache[id].rolls = 10;
+        if (userCache[id].rolls > 0) {
+            userCache[id].rolls--;
+            userCache[id].lastInterval = thisInterval;
+            roll(message, userCache[id].rolls);
+        } else {
+            var minutesLeft = 59-date.getMinutes();
+            message.channel.send(`You're out of rolls ${message.author}! Your rolls will reset in **${minutesLeft} ${minutesLeft == 1 ? "minute" : "minutes"}**.`)
+        }
+        //user does not exist in cache
+    } else {
+        userCache[id] = {
+            rolls: 9,
+            lastInterval: thisInterval
+        }
+        roll(message, 9);
+    }
+}
+
+function roll(message, left) {
     var character = characters[Math.floor(Math.random() * characters.length)];
 
     var characterEmbed = new Discord.MessageEmbed()
@@ -11,14 +37,12 @@ module.exports.run = async (bot, message, args) => {
         .setDescription(character.source)
         .setImage(character.largeImage)
         .setThumbnail(`http://example.com/${character.id}`)
-        .setFooter("React to claim!")
+        .setFooter("React to claim! " + left)
 
     message.channel.send(characterEmbed).then(msg => {
-        //msg.react('🧂');
         messageInfo[msg.id.toString()] = "roll";
     })
 }
-
 //Processes a claim reaction; checks if anyone was quicker, checks if claim is up etc
 module.exports.processClaim = function processClaim(message, user, embed) {
     var regex = /http:\/\/example\.com\/(\d+)/;

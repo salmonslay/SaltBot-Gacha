@@ -27,6 +27,9 @@ claimedIds = [];
 //saves an users harem
 haremCache = [];
 
+//saves user info from mysql
+userCache = [];
+
 //Holds info about what a message is doing
 messageInfo = [];
 
@@ -77,12 +80,14 @@ fs.readdir("./commands/", (err, files) => {
 //Bot started
 bot.on("ready", () => {
     console.log(`${bot.user.username}Gacha is now online on ${bot.guilds.cache.size} servers!`)
+
     if (bot.user.username == "SaltDev") {
         bot.channels.cache.get("556801338550386688").send(`${bot.user.username}Gacha is now online on ${bot.guilds.cache.size} servers!`)
     } else {
         bot.channels.cache.get(config.statuschannel).send(`${bot.user.username}Gacha is now online on ${bot.guilds.cache.size} servers!`)
     }
 });
+
 
 bot.on('messageReactionAdd', (reaction, user) => {
     if (user.bot) return;
