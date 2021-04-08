@@ -76,11 +76,11 @@ fs.readdir("./commands/", (err, files) => {
 
 //Bot started
 bot.on("ready", () => {
-    console.log(`${bot.user.username}Gacha is now online on ${bot.guilds.size} servers!`)
+    console.log(`${bot.user.username}Gacha is now online on ${bot.guilds.cache.size} servers!`)
     if (bot.user.username == "SaltDev") {
-        bot.channels.get("556801338550386688").send(`${bot.user.username}Gacha is now online on ${bot.guilds.size} servers!`)
+        bot.channels.cache.get("556801338550386688").send(`${bot.user.username}Gacha is now online on ${bot.guilds.cache.size} servers!`)
     } else {
-        bot.channels.get(config.statuschannel).send(`${bot.user.username}Gacha is now online on ${bot.guilds.size} servers!`)
+        bot.channels.cache.get(config.statuschannel).send(`${bot.user.username}Gacha is now online on ${bot.guilds.cache.size} servers!`)
     }
 });
 

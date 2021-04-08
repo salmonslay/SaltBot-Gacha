@@ -5,7 +5,7 @@ module.exports.run = async (bot, message, args) => {
 
     var character = characters[Math.floor(Math.random() * characters.length)];
 
-    var characterEmbed = new Discord.RichEmbed()
+    var characterEmbed = new Discord.MessageEmbed()
         .setColor("GOLD")
         .setTitle(character.parsedName)
         .setDescription(character.source)
@@ -76,7 +76,7 @@ function tryClaim(user, characterID, characterName, myCharacters, message, embed
             if (err) throw err;
             else {
                 console.log(`${user.username} claimed ${characterName}`)
-                const newEmbed = new Discord.RichEmbed()
+                const newEmbed = new Discord.MessageEmbed()
                     .setColor("#3D0000")
                     .setTitle(embed.title)
                     .setDescription(embed.description)

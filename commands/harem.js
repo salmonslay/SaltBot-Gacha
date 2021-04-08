@@ -81,7 +81,7 @@ EMBEDS
 
 //Creates and sends a harem embed
 function createEmbed(user, data, message, fixedCharacters, link) {
-    var characterEmbed = new Discord.RichEmbed()
+    var characterEmbed = new Discord.MessageEmbed()
         .setColor("DARK_RED")
         .setTitle(`${user.username}'s harem`)
         .setDescription(data)
@@ -108,7 +108,7 @@ module.exports.updatePage = function updatePage(message, user, embed, reaction) 
     if (currentPage == -1) currentPage = characters.length - 1;
     else if (currentPage == characters.length) currentPage = 0;
 
-    var newEmbed = new Discord.RichEmbed()
+    var newEmbed = new Discord.MessageEmbed()
         .setColor("DARK_RED")
         .setTitle(embed.title)
         .setDescription(characters[currentPage])
