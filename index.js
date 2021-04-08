@@ -43,12 +43,12 @@ connection.connect(function (e) {
                 if (!characterMap[char.id.toString()]) {
                     characters.push(char);
 
-                    characterMap.push({
+                    characterMap[char.id.toString()] = {
                         id: char.id,
                         name: char.parsedName,
                         image: char.largeImage,
-                        source: char.souce
-                    })
+                        source: char.source
+                    }
                 }
             })
             console.log(`Character list loaded. Found ${result.length} entries.`)
@@ -125,7 +125,7 @@ bot.on("message", message => {
     let commandfile = bot.commands.get(cmd.slice(prefix.length));
     if (cmd.slice(prefix.length).startsWith("mm")) bot.commands.get("mm").run(bot, message, messageArray);
     else if (commandfile) commandfile.run(bot, message, args);
-     
+
 });
 
 

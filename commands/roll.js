@@ -44,50 +44,52 @@ function tryClaim(user, characterID, characterName, myCharacters, message, embed
 
         message.channel.send(`**${user.username}** claimed **${characterName}**`);
 
-        connection.query(`SELECT largeImage FROM characters WHERE id = ${characterID}`, function (err, result) {
-            if (err) throw err;
-            else {
-                var character = result[0];
-                var charArray = JSON.parse(myCharacters);
-                var updated = false;
-                for (var i = 0; i < charArray.length; i++) {
-                    if (charArray[i].id == characterID) {
-                        charArray[i].amount++;
-                        updated = true;
-                        break;
-                    }
-                }
-                if (!updated) charArray.push({
-                    "amount": 1,
-                    "id": characterID,
-                    "name": characterName,
-                    "image": character.largeImage
-                })
 
-                var query = `INSERT INTO users VALUES (${user.id}, ${connection.escape(user.username)}, '${JSON.stringify(charArray)}', 1) 
+        var charArray = JSON.parse(myCharacters);
+        var updated = false;
+
+        //try to update existing entry
+        for (var i = 0; i < charArray.length; i++) {
+            if (charArray[i].id == characterID) {
+                charArray[i].amount++;
+                updated = true;
+                break;
+            }
+        }
+
+        //add new entry
+        var character = characterMap[characterID.toString()]
+        if (!updated) {
+            console.log(character)
+            charArray.push({
+                "amount": 1,
+                "id": characterID,
+                "name": characterName,
+                "image": character.image,
+                "source": character.source
+            })
+        }
+        var query = `INSERT INTO users VALUES (${user.id}, ${connection.escape(user.username)}, '${JSON.stringify(charArray)}', 1) 
                 ON DUPLICATE KEY UPDATE username = ${connection.escape(user.username)}, characters = '${JSON.stringify(charArray)}', hasClaimed = 1;`;
 
-                connection.query(query, function (err, result) {
-                    if (err) throw err;
-                    else {
-                        console.log(`${user.username} claimed ${characterName}`)
-                        const newEmbed = new Discord.RichEmbed()
-                            .setColor("#3D0000")
-                            .setTitle(embed.title)
-                            .setDescription(embed.description)
-                            .setImage(embed.image.url)
-                            .setThumbnail(embed.thumbnail.url)
-                            .setFooter(`Belongs to ${user.username}`, user.avatarURL)
+        connection.query(query, function (err, result) {
+            if (err) throw err;
+            else {
+                console.log(`${user.username} claimed ${characterName}`)
+                const newEmbed = new Discord.RichEmbed()
+                    .setColor("#3D0000")
+                    .setTitle(embed.title)
+                    .setDescription(embed.description)
+                    .setImage(embed.image.url)
+                    .setThumbnail(embed.thumbnail.url)
+                    .setFooter(`Belongs to ${user.username}`, user.avatarURL)
 
-                        message.edit(newEmbed)
-                    }
-                });
+                message.edit(newEmbed)
             }
         });
-
-
     }
 }
+
 
 module.exports.help = {
     name: ["r", "roll", "ma", "m"]
