@@ -19,6 +19,7 @@ module.exports.run = async (bot, message, args) => {
     })
 }
 
+//Processes a claim reaction; checks if anyone was quicker, checks if claim is up etc
 module.exports.processClaim = function processClaim(message, user, embed) {
     var regex = /http:\/\/example\.com\/(\d+)/;
     var claimedId = (embed.thumbnail.url.match(regex) || []).map(e => e.replace(regex, '$1'))[0];
@@ -36,46 +37,55 @@ module.exports.processClaim = function processClaim(message, user, embed) {
     }
 }
 
+//Tries to actually claim a character after verifying in processClaim() that user got claim 
 function tryClaim(user, characterID, characterName, myCharacters, message, embed) {
     if (!claimedIds.includes(message.id)) {
         claimedIds.push(message.id);
 
         message.channel.send(`**${user.username}** claimed **${characterName}**`);
 
-
-        var charArray = JSON.parse(myCharacters);
-        var updated = false;
-        for (var i = 0; i < charArray.length; i++) {
-            if (charArray[i].id == characterID) {
-                charArray[i].amount++;
-                updated = true;
-                break;
-            }
-        }
-        if (!updated) charArray.push({
-            "amount": 1,
-            "id": characterID,
-            "name": characterName
-        })
-
-        var query = `INSERT INTO users VALUES (${user.id}, ${connection.escape(user.username)}, '${JSON.stringify(charArray)}', 1) 
-        ON DUPLICATE KEY UPDATE username = ${connection.escape(user.username)}, characters = '${JSON.stringify(charArray)}', hasClaimed = 1;`;
-
-        connection.query(query, function (err, result) {
+        connection.query(`SELECT largeImage FROM characters WHERE id = ${characterID}`, function (err, result) {
             if (err) throw err;
             else {
-                console.log(`${user.username} claimed ${characterName}`)
-                const newEmbed = new Discord.RichEmbed()
-                    .setColor("#3D0000")
-                    .setTitle(embed.title)
-                    .setDescription(embed.description)
-                    .setImage(embed.image.url)
-                    .setThumbnail(embed.thumbnail.url)
-                    .setFooter(`Belongs to ${user.username}`, user.avatarURL)
+                var character = result[0];
+                var charArray = JSON.parse(myCharacters);
+                var updated = false;
+                for (var i = 0; i < charArray.length; i++) {
+                    if (charArray[i].id == characterID) {
+                        charArray[i].amount++;
+                        updated = true;
+                        break;
+                    }
+                }
+                if (!updated) charArray.push({
+                    "amount": 1,
+                    "id": characterID,
+                    "name": characterName,
+                    "image": character.largeImage
+                })
 
-                message.edit(newEmbed)
+                var query = `INSERT INTO users VALUES (${user.id}, ${connection.escape(user.username)}, '${JSON.stringify(charArray)}', 1) 
+                ON DUPLICATE KEY UPDATE username = ${connection.escape(user.username)}, characters = '${JSON.stringify(charArray)}', hasClaimed = 1;`;
+
+                connection.query(query, function (err, result) {
+                    if (err) throw err;
+                    else {
+                        console.log(`${user.username} claimed ${characterName}`)
+                        const newEmbed = new Discord.RichEmbed()
+                            .setColor("#3D0000")
+                            .setTitle(embed.title)
+                            .setDescription(embed.description)
+                            .setImage(embed.image.url)
+                            .setThumbnail(embed.thumbnail.url)
+                            .setFooter(`Belongs to ${user.username}`, user.avatarURL)
+
+                        message.edit(newEmbed)
+                    }
+                });
             }
         });
+
+
     }
 }
 

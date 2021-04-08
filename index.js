@@ -96,7 +96,7 @@ bot.on('messageReactionAdd', (reaction, user) => {
         if (messageInfo[message.id.toString()] == "roll" && time < 60000) bot.commands.get("roll").processClaim(message, user, embed, reaction)
 
         //update harem (mm)
-        if (messageInfo[message.id.toString()] == "mm") bot.commands.get("harem").updatePage(message, user, embed, reaction)
+        if (messageInfo[message.id.toString()] == "mm") bot.commands.get("mm").updatePage(message, user, embed, reaction)
     }
 });
 
@@ -109,7 +109,7 @@ bot.on('messageReactionRemove', (reaction, user) => {
         var embed = message.embeds[0];
 
         //update harem (mm)
-        if (messageInfo[message.id.toString()] == "mm") bot.commands.get("harem").updatePage(message, user, embed, reaction)
+        if (messageInfo[message.id.toString()] == "mm") bot.commands.get("mm").updatePage(message, user, embed, reaction)
     }
 });
 
@@ -119,11 +119,13 @@ bot.on("message", message => {
     let prefix = config.prefix;
     if (message.content.indexOf(prefix) !== 0) return;
     let messageArray = message.content.split(" ");
-    let cmd = messageArray[0];
+    let cmd = messageArray[0].toLowerCase();
     let args = messageArray.slice(1);
 
     let commandfile = bot.commands.get(cmd.slice(prefix.length));
-    if (commandfile) commandfile.run(bot, message, args);
+    if (cmd.slice(prefix.length).startsWith("mm")) bot.commands.get("mm").run(bot, message, messageArray);
+    else if (commandfile) commandfile.run(bot, message, args);
+     
 });
 
 

@@ -1,15 +1,18 @@
 var Discord = require("discord.js");
 var config = require("../config.json");
+
+//processes a main command (-mm)
 module.exports.run = async (bot, message, args) => {
     var fixedCharacters = [
         []
     ];
     let target = message.mentions.users.first() || message.author;
+    let flag = args[0].replace("-mm", "");
     connection.query(`SELECT characters FROM users WHERE id = '${target.id}'`, function (err, result) {
         if (err) throw err;
         else {
             if (result.length > 0 && result[0].characters != "[]") {
-                var myCharacters = JSON.parse(result[0].characters);
+                var myCharacters = sortData(JSON.parse(result[0].characters), flag);
                 for (var i = 0; i < myCharacters.length; i++) {
                     if (fixedCharacters.length == (i - (i % 15)) / 15) fixedCharacters.push([]);
                     fixedCharacters[(i - (i % 15)) / 15].push(`**x${myCharacters[i].amount}** ${myCharacters[i].name}`);
@@ -17,7 +20,6 @@ module.exports.run = async (bot, message, args) => {
                 haremCache[target.id] = fixedCharacters;
 
 
-                console.log(myCharacters)
                 connection.query(`SELECT largeImage FROM characters WHERE id = '${myCharacters[0].id}'`, function (err, result2) {
                     if (err) throw err;
                     else {
@@ -32,6 +34,46 @@ module.exports.run = async (bot, message, args) => {
     });
 }
 
+/* 
+
+DATA SORT
+
+*/
+
+//Starts data sorting after flag
+function sortData(data, flag) {
+    switch (flag) {
+        //amount
+        case "a": return data.sort(dynamicSort("amount")).reverse()
+
+        //name
+        case "n": return data.sort(dynamicSort("name"))
+
+        //no sort
+        default: return data;
+    }
+}
+
+//Sorts data by property
+function dynamicSort(property) {
+    var sortOrder = 1;
+    if (property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+    }
+    return function (a, b) {
+        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+        return result * sortOrder;
+    }
+}
+
+/* 
+
+EMBEDS
+
+*/
+
+//Creates and sends a harem embed
 function createEmbed(user, data, message, fixedCharacters, link) {
     var characterEmbed = new Discord.RichEmbed()
         .setColor("DARK_RED")
@@ -45,6 +87,7 @@ function createEmbed(user, data, message, fixedCharacters, link) {
     })
 }
 
+//Updates harem embed
 module.exports.updatePage = function updatePage(message, user, embed, reaction) {
     var regex = /jpg#(\d+)#(\d+)/;
     var data = (embed.thumbnail.url.match(regex) || []).map(e => e.replace(regex, '$1'));
@@ -71,5 +114,5 @@ module.exports.updatePage = function updatePage(message, user, embed, reaction) 
 
 
 module.exports.help = {
-    name: ["mm", "harem", "characters", "mycharacters"]
+    name: ["mm"]
 }
