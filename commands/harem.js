@@ -43,11 +43,17 @@ DATA SORT
 //Starts data sorting after flag
 function sortData(data, flag) {
     switch (flag) {
-        //amount
+        //amount (3 -> 2 -> 1)
         case "a": return data.sort(dynamicSort("amount")).reverse()
 
-        //name
+        //amount reversed (1 -> 2 -> 3)
+        case "a-": return data.sort(dynamicSort("amount"))
+
+        //name (a -> b -> c)
         case "n": return data.sort(dynamicSort("name"))
+
+        //name reversed (c -> b -> a)
+        case "n-": return data.sort(dynamicSort("name")).reverse()
 
         //no sort
         default: return data;
