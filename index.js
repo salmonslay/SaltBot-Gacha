@@ -39,7 +39,7 @@ connection.connect(function (e) {
     }
 
     console.log(`\nConnected to MySQL (${process.env.mysql_database})\n`);
-    connection.query(`SELECT id,parsedName,largeImage,source FROM characters ORDER BY likeRank ASC LIMIT 20000`, function (err, result) {
+    connection.query(`SELECT id,parsedName,largeImage,source FROM characters ORDER BY likeRank ASC`, function (err, result) {
         if (err) throw err;
         else {
             result.forEach(char => {
