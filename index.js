@@ -39,7 +39,7 @@ connection.connect(function (e) {
     }
 
     console.log(`\nConnected to MySQL (${process.env.mysql_database})\n`);
-    connection.query(`SELECT id,parsedName,largeImage,source FROM characters ORDER BY likeRank ASC`, function (err, result) {
+    connection.query(`SELECT id,parsedName,rawName,nativeName,largeImage,source,likeRank,characterPage FROM characters ORDER BY likeRank ASC`, function (err, result) {
         if (err) throw err;
         else {
             result.forEach(char => {
@@ -49,8 +49,12 @@ connection.connect(function (e) {
                     characterMap[char.id.toString()] = {
                         id: char.id,
                         name: char.parsedName,
+                        rawName: char.rawName,
+                        nativeName: char.nativeName,
                         image: char.largeImage,
-                        source: char.source
+                        source: char.source,
+                        likeRank: char.likeRank,
+                        characterPage: char.characterPage
                     }
                 }
             })
