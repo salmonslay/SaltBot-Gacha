@@ -116,5 +116,5 @@ function tryClaim(user, characterID, characterName, myCharacters, message, embed
 
 
 module.exports.help = {
-    name: ["r", "roll", "ma", "m"]
+    name: ["r", "roll", "ma", "m", "wa", "w", "ha", "h"]
 }
