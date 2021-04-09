@@ -20,12 +20,7 @@ module.exports.run = async (bot, message, args) => {
                 haremCache[target.id] = fixedCharacters;
 
 
-                connection.query(`SELECT largeImage FROM characters WHERE id = '${myCharacters[0].id}'`, function (err, result2) {
-                    if (err) throw err;
-                    else {
-                        createEmbed(target, fixedCharacters[0], message, fixedCharacters, result2[0].largeImage);
-                    }
-                })
+                createEmbed(target, fixedCharacters[0], message, fixedCharacters, characterMap[myCharacters[0].id.toString()].image);
 
             } else {
                 createEmbed(target, ["*So empty ~*"], message, fixedCharacters, "https://i.imgur.com/ILbATq4.jpg");
@@ -44,19 +39,24 @@ DATA SORT
 function sortData(data, flag) {
     switch (flag) {
         //amount (3 -> 2 -> 1)
-        case "a": return data.sort(dynamicSort("amount")).reverse()
+        case "a":
+            return data.sort(dynamicSort("amount")).reverse()
 
-        //amount reversed (1 -> 2 -> 3)
-        case "a-": return data.sort(dynamicSort("amount"))
+            //amount reversed (1 -> 2 -> 3)
+        case "a-":
+            return data.sort(dynamicSort("amount"))
 
-        //name (a -> b -> c)
-        case "n": return data.sort(dynamicSort("name"))
+            //name (a -> b -> c)
+        case "n":
+            return data.sort(dynamicSort("name"))
 
-        //name reversed (c -> b -> a)
-        case "n-": return data.sort(dynamicSort("name")).reverse()
+            //name reversed (c -> b -> a)
+        case "n-":
+            return data.sort(dynamicSort("name")).reverse()
 
-        //no sort
-        default: return data;
+            //no sort
+        default:
+            return data;
     }
 }
 
