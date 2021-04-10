@@ -106,7 +106,7 @@ function tryClaim(user, characterID, characterName, myCharacters, message, embed
                     .setDescription(embed.description)
                     .setImage(embed.image.url)
                     .setThumbnail(embed.thumbnail.url)
-                    .setFooter(`Belongs to ${user.username}`, user.avatarURL)
+                    .setFooter(`Belongs to ${user.username}`, user.displayAvatarURL({ format: 'png', dynamic: true, size: 256 }))
 
                 message.edit(newEmbed)
             }
