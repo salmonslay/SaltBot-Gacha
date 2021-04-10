@@ -105,7 +105,10 @@ bot.on('messageReactionAdd', (reaction, user) => {
         if (messageInfo[message.id.toString()] == "roll" && time < 60000) bot.commands.get("roll").processClaim(message, user, embed, reaction)
 
         //update harem (mm)
-        if (messageInfo[message.id.toString()] == "mm") bot.commands.get("mm").updatePage(message, user, embed, reaction)
+        else if (messageInfo[message.id.toString()] == "mm") bot.commands.get("mm").updatePage(message, user, embed, reaction)
+
+        //update top characters (top)
+        if (messageInfo[message.id.toString()] == "top") bot.commands.get("top").setPage(message, embed, reaction)
     }
 });
 
@@ -119,6 +122,9 @@ bot.on('messageReactionRemove', (reaction, user) => {
 
         //update harem (mm)
         if (messageInfo[message.id.toString()] == "mm") bot.commands.get("mm").updatePage(message, user, embed, reaction)
+
+        //update top characters (top)
+        if (messageInfo[message.id.toString()] == "top") bot.commands.get("top").setPage(message, embed, reaction)
     }
 });
 
