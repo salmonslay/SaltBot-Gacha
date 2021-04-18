@@ -88,9 +88,6 @@ function tryClaim(user, characterID, characterName, myCharacters, message, embed
             charArray.push({
                 "amount": 1,
                 "id": characterID,
-                "name": characterName,
-                "image": character.image,
-                "source": character.source
             })
         }
         var query = `INSERT INTO users VALUES (${user.id}, ${connection.escape(user.username)}, ${connection.escape(JSON.stringify(charArray))}, 1) 

@@ -12,7 +12,14 @@ module.exports.run = async (bot, message, args) => {
         if (err) throw err;
         else {
             if (result.length > 0 && result[0].characters != "[]") {
-                var myCharacters = sortData(JSON.parse(result[0].characters), flag);
+                var myCharacters = [];
+                JSON.parse(result[0].characters).forEach(char => {
+                    var entry = characterMap[char.id];
+                    entry.amount = char.amount;
+                    myCharacters.push(entry);
+                })
+                myCharacters = sortData(myCharacters, flag);
+
                 for (var i = 0; i < myCharacters.length; i++) {
                     if (fixedCharacters.length == (i - (i % 15)) / 15) fixedCharacters.push([]);
                     fixedCharacters[(i - (i % 15)) / 15].push(`**x${myCharacters[i].amount}** ${myCharacters[i].name}`);
@@ -28,7 +35,7 @@ module.exports.run = async (bot, message, args) => {
         }
     });
 }
-
+// characterMap[myCharacters[i].id].likeRank
 /* 
 
 DATA SORT
@@ -53,6 +60,14 @@ function sortData(data, flag) {
             //name reversed (c -> b -> a)
         case "n-":
             return data.sort(dynamicSort("name")).reverse()
+
+            //rank (1 -> 2 -> 3)
+        case "r":
+            return data.sort(dynamicSort("likeRank"))
+
+            //rank reversed (3 -> 2 -> 1)
+        case "r-":
+            return data.sort(dynamicSort("likeRank")).reverse()
 
             //no sort
         default:
