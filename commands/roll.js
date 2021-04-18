@@ -13,9 +13,9 @@ module.exports.run = async (bot, message, args) => {
         if (userCache[id].rolls > 0) {
             userCache[id].rolls--;
             userCache[id].lastInterval = thisInterval;
-            roll(message, userCache[id].rolls);
+            roll(message, userCache[id].rolls, characters[Math.floor(Math.random() * characters.length)]);
         } else {
-            var minutesLeft = 59-date.getMinutes();
+            var minutesLeft = 59 - date.getMinutes();
             message.channel.send(`You're out of rolls ${message.author}! Your rolls will reset in **${minutesLeft} ${minutesLeft == 1 ? "minute" : "minutes"}**.`)
         }
         //user does not exist in cache
@@ -24,13 +24,11 @@ module.exports.run = async (bot, message, args) => {
             rolls: 9,
             lastInterval: thisInterval
         }
-        roll(message, 9);
+        roll(message, 9, characters[Math.floor(Math.random() * characters.length)]);
     }
 }
 
-function roll(message, left) {
-    var character = characters[Math.floor(Math.random() * characters.length)];
-
+var roll = function (message, left, character) {
     var characterEmbed = new Discord.MessageEmbed()
         .setColor("GOLD")
         .setTitle(character.parsedName)
@@ -43,6 +41,8 @@ function roll(message, left) {
         messageInfo[msg.id.toString()] = "roll";
     })
 }
+
+module.exports.roll = roll;
 //Processes a claim reaction; checks if anyone was quicker, checks if claim is up etc
 module.exports.processClaim = function processClaim(message, user, embed) {
     var regex = /http:\/\/example\.com\/(\d+)/;
@@ -106,7 +106,11 @@ function tryClaim(user, characterID, characterName, myCharacters, message, embed
                     .setDescription(embed.description)
                     .setImage(embed.image.url)
                     .setThumbnail(embed.thumbnail.url)
-                    .setFooter(`Belongs to ${user.username}`, user.displayAvatarURL({ format: 'png', dynamic: true, size: 256 }))
+                    .setFooter(`Belongs to ${user.username}`, user.displayAvatarURL({
+                        format: 'png',
+                        dynamic: true,
+                        size: 256
+                    }))
 
                 message.edit(newEmbed)
             }
