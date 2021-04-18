@@ -10,7 +10,7 @@ function createEmbed(message, page, edit) {
     if (Number.isNaN(page) || page < 1) page = 1;
     else if (page > 1000) page = 1000;
     for (var i = (page - 1) * 15; i < (page - 1) * 15 + 15; i++) {
-        pageList += `**#${characters[i].likeRank}** - **${characters[i].parsedName}** - ${characters[i].source}\n`;
+        pageList += `**#${i+1}** - **${characters[i].parsedName}** - ${characters[i].source}\n`;
     }
 
 

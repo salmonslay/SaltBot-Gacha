@@ -31,9 +31,9 @@ module.exports.run = async (bot, message, args) => {
 var roll = function (message, left, character) {
     var characterEmbed = new Discord.MessageEmbed()
         .setColor("GOLD")
-        .setTitle(character.parsedName)
+        .setTitle(character.name)
         .setDescription(character.source)
-        .setImage(character.largeImage)
+        .setImage(character.image)
         .setThumbnail(`http://example.com/${character.id}`)
         .setFooter("React to claim! " + left)
 

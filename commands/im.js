@@ -18,7 +18,7 @@ module.exports.run = async (bot, message, args) => {
 
     ///Checks through all characters till a direct match is found
     characters.some(char => {
-        var parsedName = char.parsedName.toLowerCase();
+        var parsedName = char.name.toLowerCase();
         var rawName = char.rawName.toLowerCase().replace(",", "");
         if (parsedName == search || rawName == search || char.nativeName == search) { //direct match found
             bestGuess = char;
@@ -35,7 +35,7 @@ module.exports.run = async (bot, message, args) => {
     else {
         var text = `Matches for **${search}**:\n\n`;
         for (var i = 0; i < matches.length; i++) {
-            text += `**${matches[i].parsedName}** - ${matches[i].source}\n`;
+            text += `**${matches[i].name}** - ${matches[i].source}\n`;
             if (i == 25) {
                 text += `\nAnd __${matches.length-25}__ more...`
                 break;
@@ -48,10 +48,10 @@ module.exports.run = async (bot, message, args) => {
 function sendChar(message, character) {
     var characterEmbed = new Discord.MessageEmbed()
         .setColor("#a7eec9")
-        .setTitle(character.parsedName)
+        .setTitle(character.name)
         .setDescription(`${character.source}\nLike Rank: #${character.likeRank}`)
         .setURL(character.characterPage)
-        .setImage(character.largeImage)
+        .setImage(character.image)
 
     message.channel.send(characterEmbed)
 }

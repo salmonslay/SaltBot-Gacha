@@ -39,23 +39,26 @@ connection.connect(function (e) {
     }
 
     console.log(`\nConnected to MySQL (${process.env.mysql_database})\n`);
-    connection.query(`SELECT id,parsedName,rawName,nativeName,largeImage,source,likeRank,characterPage FROM characters ORDER BY likeRank ASC`, function (err, result) {
+    connection.query(`SELECT id,parsedName,rawName,nativeName,largeImage,source,characterPage,likes FROM characters ORDER BY likes DESC`, function (err, result) {
         if (err) throw err;
         else {
+            var i = 1;
             result.forEach(char => {
                 if (!characterMap[char.id.toString()]) {
-                    characters.push(char);
-
-                    characterMap[char.id.toString()] = {
+                    var fixedCharacter = {
                         id: char.id,
                         name: char.parsedName,
                         rawName: char.rawName,
                         nativeName: char.nativeName,
                         image: char.largeImage,
                         source: char.source,
-                        likeRank: char.likeRank,
+                        likeRank: i++,
+                        likes: char.likes,
                         characterPage: char.characterPage
                     }
+
+                    characters.push(fixedCharacter);
+                    characterMap[char.id.toString()] = fixedCharacter;
                 }
             })
             console.log(`Character list loaded. Found ${result.length} entries.`)
