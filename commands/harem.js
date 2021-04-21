@@ -22,7 +22,10 @@ module.exports.run = async (bot, message, args) => {
 
                 for (var i = 0; i < myCharacters.length; i++) {
                     if (fixedCharacters.length == (i - (i % 15)) / 15) fixedCharacters.push([]);
-                    fixedCharacters[(i - (i % 15)) / 15].push(`**x${myCharacters[i].amount}** ${myCharacters[i].name}`);
+
+                    var prefix = `${(flag.includes("r")) ? `**#${myCharacters[i].likeRank}**` : ""}`
+                    var suffix = `${(flag.includes("a")) ? `**${myCharacters[i].amount}**x` : ""}`
+                    fixedCharacters[(i - (i % 15)) / 15].push(`${prefix} ${myCharacters[i].name} ${suffix}`);
                 }
                 haremCache[target.id] = fixedCharacters;
 
@@ -44,36 +47,35 @@ DATA SORT
 
 //Starts data sorting after flag
 function sortData(data, flag) {
-    switch (flag) {
-        //amount (3 -> 2 -> 1)
-        case "a":
-            return data.sort(dynamicSort("amount")).reverse()
 
-            //amount reversed (1 -> 2 -> 3)
-        case "a-":
-            return data.sort(dynamicSort("amount"))
+    //name (a -> b -> c)
+    if (flag.includes("n") && !flag.includes("n-"))
+        return data.sort(dynamicSort("name"))
 
-            //name (a -> b -> c)
-        case "n":
-            return data.sort(dynamicSort("name"))
+    //name reversed (c -> b -> a)
+    else if (flag.includes("n-"))
+        return data.sort(dynamicSort("name")).reverse()
 
-            //name reversed (c -> b -> a)
-        case "n-":
-            return data.sort(dynamicSort("name")).reverse()
+    //rank (1 -> 2 -> 3)
+    else if (flag.includes("r") && !flag.includes("r-"))
+        return data.sort(dynamicSort("likeRank"))
 
-            //rank (1 -> 2 -> 3)
-        case "r":
-            return data.sort(dynamicSort("likeRank"))
+    //rank reversed (3 -> 2 -> 1)
+    else if (flag.includes("r-"))
+        return data.sort(dynamicSort("likeRank")).reverse()
 
-            //rank reversed (3 -> 2 -> 1)
-        case "r-":
-            return data.sort(dynamicSort("likeRank")).reverse()
+    //amount  (3 -> 2 -> 1)
+    else if (flag.includes("a") && !flag.includes("a-"))
+        return data.sort(dynamicSort("amount")).reverse()
 
-            //no sort
-        default:
-            return data;
-    }
+    //amount reversed (1 -> 2 -> 3)
+    else if (flag.includes("a-"))
+        return data.sort(dynamicSort("amount"))
+
+    else
+        return data;
 }
+
 
 //Sorts data by property
 function dynamicSort(property) {
