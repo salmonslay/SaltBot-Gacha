@@ -63,7 +63,7 @@ function tryClaim(user, characterID, characterName, myCharacters, message, embed
     if (!claimedIds.includes(message.id)) {
         claimedIds.push(message.id);
 
-        message.channel.send(`**${user.username}** claimed **${characterName}**`);
+        message.channel.send(`**${user.username}** claimed **${characterName}:heart_exclamation:**`);
 
 
         var charArray = JSON.parse(myCharacters);
