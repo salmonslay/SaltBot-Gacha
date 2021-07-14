@@ -15,8 +15,10 @@ module.exports.run = async (bot, message, args) => {
                 var myCharacters = [];
                 JSON.parse(result[0].characters).forEach(char => {
                     var entry = characterMap[char.id];
-                    entry.amount = char.amount;
-                    myCharacters.push(entry);
+                    if (entry) {
+                        entry.amount = char.amount;
+                        myCharacters.push(entry);
+                    }
                 })
                 myCharacters = sortData(myCharacters, flag);
 
@@ -30,7 +32,10 @@ module.exports.run = async (bot, message, args) => {
                 haremCache[target.id] = fixedCharacters;
 
 
-                createEmbed(target, fixedCharacters[0], message, fixedCharacters, characterMap[myCharacters[0].id.toString()].image);
+                if (myCharacters.length > 0)
+                    createEmbed(target, fixedCharacters[0], message, fixedCharacters, characterMap[myCharacters[0].id.toString()].image);
+                else
+                    createEmbed(target, ["*So empty ~*"], message, fixedCharacters, "https://i.imgur.com/ILbATq4.jpg");
 
             } else {
                 createEmbed(target, ["*So empty ~*"], message, fixedCharacters, "https://i.imgur.com/ILbATq4.jpg");
