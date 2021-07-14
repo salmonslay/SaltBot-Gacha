@@ -14,7 +14,8 @@ module.exports.run = async (bot, message, args) => {
             //user found
             if (result.length > 0) {
                 var characters = JSON.parse(result[0].characters);
-                header = characterMap[characters[0].id.toString()].image;
+                if (characterMap[characters[0]])
+                    header = characterMap[characters[0].id.toString()].image;
                 characters.forEach(char => {
                     unique++;
                     total += char.amount;
@@ -35,7 +36,7 @@ module.exports.run = async (bot, message, args) => {
                 
                 **Unique characters**: ${unique} (${100-dupes}%)
                 **Duplicate characters**: ${total-unique} (${dupes}%)`)
-                
+
             message.channel.send(characterEmbed)
         }
     })
