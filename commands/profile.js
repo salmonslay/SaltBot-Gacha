@@ -1,6 +1,3 @@
-var Discord = require("discord.js");
-var config = require("../config.json");
-
 module.exports.run = async (bot, message, args) => {
 
     let target = message.mentions.users.first() || message.author;

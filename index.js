@@ -1,6 +1,6 @@
 require('dotenv').config();
-var Discord = require("discord.js");
-var config = require("./config.json");
+Discord = require("discord.js");
+config = require("./config.json");
 var bot = new Discord.Client();
 var fs = require("fs");
 var mysql2 = require("mysql2");

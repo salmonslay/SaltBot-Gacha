@@ -1,6 +1,3 @@
-var Discord = require("discord.js");
-var config = require("../config.json");
-
 //processes a main command (-mm)
 module.exports.run = async (bot, message, args) => {
     var fixedCharacters = [

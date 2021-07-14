@@ -1,6 +1,3 @@
-var Discord = require("discord.js");
-var config = require("../config.json");
-
 module.exports.run = async (bot, message, args) => {
 
     if (message.author.id != config.fabian) return;
