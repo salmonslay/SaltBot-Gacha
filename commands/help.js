@@ -17,7 +17,7 @@ var help = new Discord.MessageEmbed()
         \u200B`)
     .addField(
         "Flags 🚩",
-        `*Add these flags to commands to sort your claimed characters and show additional info about them, for example \`-mmna\`.*
+        `*Add these flags to commands to sort your claimed characters and show additional info about them, for example **-mma**.*
         \u200B
         **a (amount)** Shows how many times you have claimed the character
         **n (name)** Sorts the characters by their name
