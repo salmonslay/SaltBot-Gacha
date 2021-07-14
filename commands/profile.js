@@ -32,7 +32,10 @@ module.exports.run = async (bot, message, args) => {
                 **Total characters**: ${total}
                 
                 **Unique characters**: ${unique} (${100-dupes}%)
-                **Duplicate characters**: ${total-unique} (${dupes}%)`)
+                **Duplicate characters**: ${total-unique} (${dupes}%)
+                
+                ${roles.dev.includes(target.id) ? "<:developer:864950526549426216>" : ""} ${roles.trusted.includes(target.id) ? "<:trusted:864950543562833940>" : ""}
+                `)
 
             message.channel.send(characterEmbed)
         }

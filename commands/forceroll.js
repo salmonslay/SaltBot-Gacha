@@ -1,6 +1,6 @@
 module.exports.run = async (bot, message, args) => {
 
-    if (message.author.id != config.fabian) return;
+    if (!config.dev.includes(message.author.id)) return;
 
     //query user searched for
     var search = args.join(' ').toLowerCase()
