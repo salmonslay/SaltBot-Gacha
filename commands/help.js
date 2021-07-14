@@ -6,13 +6,22 @@ module.exports.run = async (bot, message, args) => {
 
 var help = new Discord.MessageEmbed()
     .setColor("#fff8f7")
+    .setTitle("Gacha")
     .addField(
-        "Gacha 💵",
+        "Commands 💵",
         `**-roll** Roll a random character to claim
         **-mm [user]** Check your claimed characters
         **-im <character>** Search for a character
         **-top [page]** See the most claimed characters
         **-profile [user]** Check your profile stats
+        \u200B`)
+    .addField(
+        "Flags 🚩",
+        `*Add these flags to commands to sort your claimed characters and show additional info about them, for example \`-mmna\`.*
+        \u200B
+        **a (amount)** Shows how many times you have claimed the character
+        **n (name)** Sorts the characters by their name
+        **r (rank)** Shows the characters claim rank
         `)
 
 module.exports.help = {
