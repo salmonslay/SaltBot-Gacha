@@ -38,7 +38,7 @@ connection.connect(function (e) {
     if (e) {
         return console.error('error: ' + e.message);
     }
-
+    require('./routes/database.js').createTables();
     console.log(`\nConnected to MySQL (${process.env.mysql_database})\n`);
     connection.query(`SELECT id,parsedName,rawName,nativeName,largeImage,source,characterPage,likes FROM characters ORDER BY likes DESC`, function (err, result) {
         if (err) throw err;
