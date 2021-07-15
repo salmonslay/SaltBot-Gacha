@@ -7,7 +7,6 @@ function createEmbed(message, page, edit) {
     if (Number.isNaN(page) || page < 1) page = 1;
     else if (page > 1000) page = 1000;
     for (var i = (page - 1) * 15; i < (page - 1) * 15 + 15; i++) {
-        console.log(characters[i])
         pageList += `**#${i+1}** - **${characters[i].name}** - ${characters[i].source}\n`;
     }
 
@@ -18,7 +17,6 @@ function createEmbed(message, page, edit) {
         .setDescription(pageList)
         .setThumbnail(`${characters[(page-1) * 15].image}#${page}`)
         .setFooter(`Page ${page}`)
-    console.log(topEmbed)
 
     if (!edit)
         message.channel.send(topEmbed).then(msg => {
