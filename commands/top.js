@@ -4,10 +4,20 @@ module.exports.run = async (bot, message, args) => {
 
 function createEmbed(message, page, edit) {
     var pageList = "";
-    if (Number.isNaN(page) || page < 1) page = 1;
-    else if (page > 1000) page = 1000;
+
+    //try to take page from user
+    if (Number.isNaN(page)) page = 1;
+
+    //check if out of range
+    else if (page > 1000) page = 1;
+    else if (page < 1) page = 1000;
+
+    //check if characters are enough, else take last page
+    if (page * 15 > characters.length) page = Math.round(characters.length / 15)
+
     for (var i = (page - 1) * 15; i < (page - 1) * 15 + 15; i++) {
-        pageList += `**#${i+1}** - **${characters[i].name}** - ${characters[i].source}\n`;
+        if (characters[i])
+            pageList += `**#${i+1}** - **${characters[i].name}** - ${characters[i].source}\n`;
     }
 
 
@@ -35,7 +45,6 @@ module.exports.setPage = function (message, embed, reaction) {
     if (reaction._emoji.name == "⬅️") currentPage--;
     else if (reaction._emoji.name = "➡️") currentPage++;
 
-    if (currentPage < 1 || currentPage > 1000) return;
     createEmbed(message, currentPage, true)
 }
 
