@@ -79,21 +79,27 @@ function tryClaim(user, characterID, characterName, myCharacters, message, embed
         }
 
         //add new entry
-        var character = characterMap[characterID.toString()]
         if (!updated) {
-            console.log(character)
             charArray.push({
                 "amount": 1,
                 "id": characterID,
             })
         }
-        var query = `INSERT INTO users VALUES (${user.id}, ${connection.escape(user.username)}, ${connection.escape(JSON.stringify(charArray))}, 1) 
-                ON DUPLICATE KEY UPDATE username = ${connection.escape(user.username)}, characters = ${connection.escape(JSON.stringify(charArray))}, hasClaimed = 1;`;
+
+        var query = `
+        INSERT INTO users (id, username, characters, hasClaimed, totalCharacters, uniqueCharacters)
+        VALUES (${user.id}, ${connection.escape(user.username)}, ${connection.escape(JSON.stringify(charArray))}, 1, 1, 1) 
+        ON DUPLICATE KEY UPDATE 
+        username = ${connection.escape(user.username)}, 
+        characters = ${connection.escape(JSON.stringify(charArray))}, 
+        hasClaimed = 1, 
+        totalCharacters = totalCharacters + 1, 
+        uniqueCharacters = uniqueCharacters + ${updated ? 0 : 1};`;
 
         connection.query(query, function (err, result) {
             if (err) throw err;
             else {
-                console.log(`${user.username} claimed ${characterName}`)
+                console.log(`${user.username} claimed ${characterName} (ID ${characterID})`)
                 const newEmbed = new Discord.MessageEmbed()
                     .setColor("#3D0000")
                     .setTitle(embed.title)
