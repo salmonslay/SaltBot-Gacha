@@ -149,6 +149,13 @@ bot.on("message", message => {
 
 });
 
+//Update claim reset 
+var j = schedule.scheduleJob('0 0 */3 * * *', function () {
+    connection.query(`UPDATE users SET hasClaimed = 0`, function (err, result) {
+        console.log(`Added claim to ${result.changedRows}/${result.affectedRows} users.`)
+    })
+});
+
 
 //Get token from config.json
 bot.login(process.env.BOT_TOKEN);
