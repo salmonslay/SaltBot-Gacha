@@ -1,6 +1,6 @@
 module.exports.run = async (bot, message, args) => {
 
-    if (!config.dev.includes(message.author.id)) return;
+    if (!roles.trusted.includes(message.author.id)) return;
 
     //query user searched for
     var search = args.join(' ').toLowerCase()
