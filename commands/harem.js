@@ -26,9 +26,6 @@ module.exports.run = async (bot, message, args) => {
                     var suffix = `${(flag.includes("a")) ? `**${myCharacters[i].amount}**x` : ""}`
                     fixedCharacters[(i - (i % 15)) / 15].push(`${prefix} ${myCharacters[i].name} ${suffix}`);
                 }
-                haremCache[target.id] = fixedCharacters;
-
-
                 if (myCharacters.length > 0)
                     createEmbed(target, fixedCharacters[0], message, fixedCharacters, characterMap[myCharacters[0].id.toString()].image);
                 else
@@ -109,6 +106,7 @@ function createEmbed(user, data, message, fixedCharacters, link) {
     message.channel.send(characterEmbed).then(msg => {
         if (fixedCharacters.length > 1) msg.react("⬅️").then(() => msg.react("➡️"))
         messageInfo[msg.id.toString()] = "mm";
+        haremCache[msg.id] = fixedCharacters;
     })
 }
 
@@ -119,11 +117,11 @@ module.exports.updatePage = function updatePage(message, user, embed, reaction) 
     var userID = data[1];
     var currentPage = data[2];
     var oldPage = currentPage;
-    var characters = haremCache[userID];
+    var characters = haremCache[message.id];
 
     if (reaction._emoji.name == "⬅️") currentPage--;
     else if (reaction._emoji.name = "➡️") currentPage++;
-
+    
     if (currentPage == -1) currentPage = characters.length - 1;
     else if (currentPage == characters.length) currentPage = 0;
 
