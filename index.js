@@ -143,6 +143,8 @@ bot.on("message", message => {
 
     let commandfile = bot.commands.get(cmd.slice(prefix.length));
     if (cmd.slice(prefix.length).startsWith("mm")) bot.commands.get("mm").run(bot, message, messageArray);
+    else if (cmd.slice(prefix.length).startsWith("lb")) bot.commands.get("lb").run(bot, message, messageArray);
+
     else if (commandfile) commandfile.run(bot, message, args);
 
 });
