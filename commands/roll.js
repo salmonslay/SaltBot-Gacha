@@ -36,6 +36,7 @@ var roll = function (message, left, character) {
 
     message.channel.send(characterEmbed).then(msg => {
         messageInfo[msg.id.toString()] = "roll";
+        msg.react('❤')
     })
 }
 
