@@ -23,7 +23,7 @@ module.exports.run = async (bot, message, args) => {
                     if (fixedCharacters.length == (i - (i % 15)) / 15) fixedCharacters.push([]);
 
                     var prefix = `${(flag.includes("r")) ? `**#${myCharacters[i].likeRank}**` : ""}`
-                    var suffix = `${(flag.includes("a")) ? `**${myCharacters[i].amount}**x` : ""}`
+                    var suffix = `**${myCharacters[i].amount}**x`
                     fixedCharacters[(i - (i % 15)) / 15].push(`${prefix} ${myCharacters[i].name} ${suffix}`);
                 }
                 if (myCharacters.length > 0)
@@ -121,7 +121,7 @@ module.exports.updatePage = function updatePage(message, user, embed, reaction) 
 
     if (reaction._emoji.name == "⬅️") currentPage--;
     else if (reaction._emoji.name = "➡️") currentPage++;
-    
+
     if (currentPage == -1) currentPage = characters.length - 1;
     else if (currentPage == characters.length) currentPage = 0;
 
