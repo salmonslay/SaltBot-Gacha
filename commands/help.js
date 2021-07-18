@@ -14,6 +14,7 @@ var help = new Discord.MessageEmbed()
         **-im <character>** Search for a character
         **-top [page]** See the most claimed characters
         **-profile [user]** Check your profile stats
+        **-suggest** Suggest a character and get a reward
         \u200B`)
     .addField(
         "Flags 🚩",

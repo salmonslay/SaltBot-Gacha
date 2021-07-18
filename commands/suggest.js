@@ -4,8 +4,24 @@ module.exports.run = async (bot, message, args) => {
     var name = args[0];
     var source = args[1];
     var free = args.slice(2).join(' ');
+    if (args[0].trim() == '' && args.length == 1) {
+        var help = new Discord.MessageEmbed()
+        .setTitle("Suggest a character")
+        .setDescription(`
+        **Syntax**: -suggest <name>$<source>$[note]
 
-    if (message.attachments.size > 0 && args.length > 1) {
+        :exclamation: Important: __Attach__ an image to your suggestion message :exclamation:
+
+        **name**: An official name for the character.
+        **source**: The character source, use __romanji__ for Japanese titles.
+        **note**: Free text to make it easier to verify and add the character, preferrebly a source link.
+
+        **Example submission:**
+        `)
+        .setImage("https://i.imgur.com/odWAEk7.png")
+
+        message.channel.send(help)
+    } else if (message.attachments.size > 0 && args.length > 1) {
         var image = (message.attachments).array()[0].url;
 
         var embed = new Discord.MessageEmbed()
@@ -23,10 +39,8 @@ module.exports.run = async (bot, message, args) => {
             msg.react('✈');
         })
     } else {
-        message.channel.send(`Something went wrong trying to create your submission. Make sure you have a name and source, and attach your image to the command message.`);
+        message.channel.send(`Something went wrong trying to create your submission. Write **-suggest** if you need help.`);
     }
-
-    // (embed);
 }
 
 //Processes a claim reaction; checks if anyone was quicker, checks if claim is up etc
