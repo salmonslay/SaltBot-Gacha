@@ -92,7 +92,7 @@ bot.on("ready", () => {
     if (bot.user.username == "SaltDev") {
         bot.channels.cache.get("556801338550386688").send(`${bot.user.username}Gacha is now online on ${bot.guilds.cache.size} servers!`)
     } else {
-        bot.channels.cache.get(config.statuschannel).send(`${bot.user.username}Gacha is now online on ${bot.guilds.cache.size} servers!`)
+        bot.channels.cache.get(config.channels.status).send(`${bot.user.username}Gacha is now online on ${bot.guilds.cache.size} servers!`)
     }
 });
 
