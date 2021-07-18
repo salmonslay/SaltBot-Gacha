@@ -2,7 +2,7 @@ require('dotenv').config();
 Discord = require("discord.js");
 config = require("./config.json");
 roles = require("./roles.json");
-var bot = new Discord.Client();
+bot = new Discord.Client();
 var fs = require("fs");
 var mysql2 = require("mysql2");
 var schedule = require('node-schedule');
@@ -113,6 +113,9 @@ bot.on('messageReactionAdd', (reaction, user) => {
 
         //update top characters (top)
         if (messageInfo[message.id.toString()] == "top") bot.commands.get("top").setPage(message, embed, reaction)
+
+        //update top characters (top)
+        if (messageInfo[message.id.toString()] == "suggestion") bot.commands.get("suggest").submit(message, embed)
     }
 });
 
