@@ -4,8 +4,8 @@ module.exports.run = async (bot, message, args) => {
     var name = args[0];
     var source = args[1];
     var free = args.slice(2).join(' ');
-
-    if (message.attachments.size > 0) {
+console.log(args.length)
+    if (message.attachments.size > 0 && args.length > 1) {
         var image = (message.attachments).array()[0].url;
 
         var embed = new Discord.MessageEmbed()
