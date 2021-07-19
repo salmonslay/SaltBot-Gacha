@@ -46,13 +46,16 @@ function createEmbed(message, page, edit, flag) {
         .setColor("DARK_RED")
         .setTitle(`Top ${flag == "t" ? "total" : "unique"} characters`)
         .setDescription(pageList)
-        .setThumbnail(`https://example.com/#${page}#${flag}`)
         .setFooter(`Page ${page}`)
 
     if (!edit)
         message.channel.send(topEmbed).then(msg => {
             msg.react("⬅️").then(() => msg.react("➡️"))
-            messageInfo[msg.id.toString()] = "top";
+            messageInfo[msg.id] = {
+                type: "top",
+                page: page,
+                flag: flag
+            };
         })
     else message.edit(topEmbed);
 }
@@ -60,10 +63,8 @@ function createEmbed(message, page, edit, flag) {
 
 //gets an existing top-embed and changes page on it
 module.exports.setPage = function (message, embed, reaction) {
-    var regex = /jpg#(\d+)/;
-    var data = (embed.thumbnail.url.match(regex) || []).map(e => e.replace(regex, '$1'));
-    var currentPage = data[0];
-    var flag = data[1];
+    var currentPage = messageInfo.page;
+    var flag = messageInfo.flag;
     if (reaction._emoji.name == "⬅️") currentPage--;
     else if (reaction._emoji.name = "➡️") currentPage++;
 

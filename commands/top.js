@@ -25,23 +25,29 @@ function createEmbed(message, page, edit) {
         .setColor("DARK_RED")
         .setTitle(`Top characters`)
         .setDescription(pageList)
-        .setThumbnail(`${characters[(page-1) * 15].image}#${page}`)
+        .setThumbnail(`${characters[(page-1) * 15].image}`)
         .setFooter(`Page ${page}`)
 
     if (!edit)
         message.channel.send(topEmbed).then(msg => {
             msg.react("⬅️").then(() => msg.react("➡️"))
-            messageInfo[msg.id.toString()] = "top";
+            messageInfo[msg.id] = {
+                type: "top",
+                page: page
+            };
         })
-    else message.edit(topEmbed);
+    else {
+        messageInfo[message.id].page = page;
+        message.edit(topEmbed);
+    }
+
+
 }
 
 //gets an existing top-embed and changes page on it
 module.exports.setPage = function (message, embed, reaction) {
-    var regex = /jpg#(\d+)/;
-    var data = (embed.thumbnail.url.match(regex) || []).map(e => e.replace(regex, '$1'));
-    var currentPage = data[0];
-    var oldPage = currentPage;
+    var currentPage = messageInfo[message.id].page;
+
     if (reaction._emoji.name == "⬅️") currentPage--;
     else if (reaction._emoji.name = "➡️") currentPage++;
 

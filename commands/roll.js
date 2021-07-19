@@ -7,10 +7,13 @@ module.exports.run = async (bot, message, args) => {
     if (userCache[id]) {
         //reset rolls if user haven't rolled this hour
         if (userCache[id].lastInterval != thisInterval) userCache[id].rolls = 10;
+
+        //user got rolls in stock
         if (userCache[id].rolls > 0) {
             userCache[id].rolls--;
             userCache[id].lastInterval = thisInterval;
-            roll(message, userCache[id].rolls, characters[Math.floor(Math.random() * characters.length)]);
+            var character = characters[Math.floor(Math.random() * characters.length)];
+            roll(message, userCache[id].rolls, character);
         } else {
             var minutesLeft = 59 - date.getMinutes();
             message.channel.send(`You're out of rolls ${message.author}! Your rolls will reset in **${minutesLeft} ${minutesLeft == 1 ? "minute" : "minutes"}**.`)
@@ -31,20 +34,21 @@ var roll = function (message, left, character) {
         .setTitle(character.name)
         .setDescription(character.source)
         .setImage(character.image)
-        .setThumbnail(`http://example.com/${character.id}`)
         .setFooter("React to claim! " + left)
 
     message.channel.send(characterEmbed).then(msg => {
-        messageInfo[msg.id.toString()] = "roll";
+        messageInfo[msg.id] = {
+            type: "roll",
+            id: character.id
+        };
         msg.react('❤')
     })
 }
-
 module.exports.roll = roll;
+
 //Processes a claim reaction; checks if anyone was quicker, checks if claim is up etc
 module.exports.processClaim = function processClaim(message, user, embed) {
-    var regex = /http:\/\/example\.com\/(\d+)/;
-    var claimedId = (embed.thumbnail.url.match(regex) || []).map(e => e.replace(regex, '$1'))[0];
+    var claimedId = messageInfo[message.id].id;
     var claimedName = embed.title;
     if (!claimedIds.includes(message.id)) {
 
@@ -109,7 +113,6 @@ function tryClaim(user, characterID, characterName, myCharacters, message, embed
                     .setTitle(embed.title)
                     .setDescription(embed.description)
                     .setImage(embed.image.url)
-                    .setThumbnail(embed.thumbnail.url)
                     .setFooter(`Belongs to ${user.username}`, user.displayAvatarURL({
                         format: 'png',
                         dynamic: true,

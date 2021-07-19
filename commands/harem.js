@@ -101,22 +101,22 @@ function createEmbed(user, data, message, fixedCharacters, link) {
         .setColor("DARK_RED")
         .setTitle(`${user.username}'s harem`)
         .setDescription(data)
-        .setThumbnail(`${link}#${user.id}#0`)
+        .setThumbnail(`${link}`)
         .setFooter(`Page 1/${fixedCharacters.length}`)
     message.channel.send(characterEmbed).then(msg => {
         if (fixedCharacters.length > 1) msg.react("⬅️").then(() => msg.react("➡️"))
-        messageInfo[msg.id.toString()] = "mm";
+        messageInfo[msg.id] = {
+            type: "mm",
+            user: user.id,
+            page: 0
+        };
         haremCache[msg.id] = fixedCharacters;
     })
 }
 
 //Updates harem embed
 module.exports.updatePage = function updatePage(message, user, embed, reaction) {
-    var regex = /jpg#(\d+)#(\d+)/;
-    var data = (embed.thumbnail.url.match(regex) || []).map(e => e.replace(regex, '$1'));
-    var userID = data[1];
-    var currentPage = data[2];
-    var oldPage = currentPage;
+    var currentPage = messageInfo[message.id].page;
     var characters = haremCache[message.id];
 
     if (reaction._emoji.name == "⬅️") currentPage--;
@@ -130,7 +130,8 @@ module.exports.updatePage = function updatePage(message, user, embed, reaction) 
         .setTitle(embed.title)
         .setDescription(characters[currentPage])
         .setFooter(`Page ${currentPage+1}/${characters.length}`)
-        .setThumbnail(embed.thumbnail.url.replace(`${userID}#${oldPage}`, `${userID}#${currentPage}`))
+        .setThumbnail(embed.thumbnail.url)
+    messageInfo[message.id].page = currentPage;
 
     message.edit(newEmbed)
 }

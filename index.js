@@ -116,16 +116,16 @@ bot.on('messageReactionAdd', (reaction, user) => {
         var embed = message.embeds[0];
 
         //r
-        if (messageInfo[message.id.toString()] == "roll" && time < 60000) bot.commands.get("roll").processClaim(message, user, embed, reaction)
+        if (messageInfo[message.id].type == "roll" && time < 60000) bot.commands.get("roll").processClaim(message, user, embed, reaction)
 
         //update harem (mm)
-        else if (messageInfo[message.id.toString()] == "mm") bot.commands.get("mm").updatePage(message, user, embed, reaction)
+        else if (messageInfo[message.id].type == "mm") bot.commands.get("mm").updatePage(message, user, embed, reaction)
 
         //update top characters (top)
-        if (messageInfo[message.id.toString()] == "top") bot.commands.get("top").setPage(message, embed, reaction)
+        if (messageInfo[message.id].type == "top") bot.commands.get("top").setPage(message, embed, reaction)
 
         //update top characters (top)
-        if (messageInfo[message.id.toString()] == "suggestion") bot.commands.get("suggest").submit(message, embed)
+        if (messageInfo[message.id].type == "suggestion") bot.commands.get("suggest").submit(message, embed)
     }
 });
 
@@ -138,10 +138,10 @@ bot.on('messageReactionRemove', (reaction, user) => {
         var embed = message.embeds[0];
 
         //update harem (mm)
-        if (messageInfo[message.id.toString()] == "mm") bot.commands.get("mm").updatePage(message, user, embed, reaction)
+        if (messageInfo[message.id].type == "mm") bot.commands.get("mm").updatePage(message, user, embed, reaction)
 
         //update top characters (top)
-        if (messageInfo[message.id.toString()] == "top") bot.commands.get("top").setPage(message, embed, reaction)
+        if (messageInfo[message.id].type == "top") bot.commands.get("top").setPage(message, embed, reaction)
     }
 });
 
