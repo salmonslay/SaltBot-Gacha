@@ -12,6 +12,7 @@
     "discord.js": "^12.5.3",
     "dotenv": "^8.2.0",
     "fs": "0.0.1-security",
+    "glob": "^7.1.7",
     "is-image-url": "^1.1.8",
     "mysql2": "^2.2.5",
     "node-schedule": "^2.0.0"

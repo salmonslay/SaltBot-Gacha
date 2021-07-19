@@ -6,6 +6,7 @@ bot = new Discord.Client();
 var fs = require("fs");
 var mysql2 = require("mysql2");
 var schedule = require('node-schedule');
+var glob = require("glob")
 bot.disabledMembers = new Map();
 bot.commands = new Discord.Collection();
 require('events').EventEmitter.prototype._maxListeners = 250;
@@ -62,7 +63,7 @@ connection.connect(function (e) {
                     characterMap[char.id.toString()] = fixedCharacter;
                 }
             })
-            console.log(`Character list loaded. Found ${result.length} entries.`)
+            console.log(`Character list loaded. Found ${characters.length} entries.`)
         }
     });
 
@@ -78,18 +79,13 @@ connection.connect(function (e) {
 });
 
 //Read commands
-fs.readdir("./commands/", (err, files) => {
+glob("./commands/**/*.js", function (err, files) {
     if (err) console.log(err);
-    let jsfile = files.filter(f => f.split(".").pop() === "js")
-    if (jsfile.length <= 0) {
-        console.log("No commands found :(");
-        return;
-    }
 
     //Load commands
-    jsfile.forEach((f, i) => {
-        let props = require(`./commands/${f}`)
-        console.log(`File ${f} loaded!`);
+    files.forEach((f, i) => {
+        let props = require(f)
+        console.log(`File ${f.replace("./commands/", "")} loaded!`);
         props.help.name.forEach(name => bot.commands.set(name, props))
 
     });
