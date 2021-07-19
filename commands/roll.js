@@ -51,8 +51,11 @@ module.exports.processClaim = function processClaim(message, user, embed) {
         connection.query(`SELECT hasClaimed,characters FROM users WHERE id = '${user.id}'`, function (err, result) {
             if (err) throw err;
             else {
+                //user is NEW
                 if (result.length == 0) tryClaim(user, claimedId, claimedName, "[]", message, embed);
+                //user have not claimed yet
                 else if (result[0].hasClaimed == 0) tryClaim(user, claimedId, claimedName, result[0].characters, message, embed);
+                //user have claimed
                 else message.channel.send(`${user.toString()}, you have already claimed someone this hour!`)
             }
         });
