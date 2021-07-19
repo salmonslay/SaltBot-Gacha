@@ -30,11 +30,8 @@ module.exports.run = async (bot, message, args) => {
                 .setThumbnail(header)
                 .setDescription(`
                 **Total characters**: ${total}
-                
-                **Unique characters**: ${unique} (${100-dupes}%)
-                **Duplicate characters**: ${total-unique} (${dupes}%)
-                
-                ${utils.getBadges(target.id)}
+                \n**Unique characters**: ${unique} (${100-dupes}%)\n**Duplicate characters**: ${total-unique} (${dupes}%)
+                \n${utils.getBadges(target.id)}
                 `)
 
             message.channel.send(characterEmbed)

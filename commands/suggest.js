@@ -7,16 +7,10 @@ module.exports.run = async (bot, message, args) => {
     if (args[0].trim() == '' && args.length == 1) {
         var help = new Discord.MessageEmbed()
         .setTitle("Suggest a character")
-        .setDescription(`
-        **Syntax**: -suggest <name>$<source>$[note]
-
-        :exclamation: Important: __Attach__ an image to your suggestion message :exclamation:
-
-        **name**: An official name for the character.
-        **source**: The character source, use __romanji__ for Japanese titles.
-        **note**: Free text to make it easier to verify and add the character, preferrebly a source link.
-
-        **Example submission:**
+        .setDescription(`**Syntax**: -suggest <name>$<source>$[note]
+        \n:exclamation: Important: __Attach__ an image to your suggestion message :exclamation:
+        \n**name**: An official name for the character.\n**source**: The character source, use __romanji__ for Japanese titles.\n**note**: Free text to make it easier to verify and add the character, preferrebly a source link.
+        \n**Example submission:**
         `)
         .setImage("https://i.imgur.com/odWAEk7.png")
 
