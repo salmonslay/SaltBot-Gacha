@@ -74,7 +74,6 @@ connection.connect(function (e) {
                     roles: item.roles ? JSON.parse(item.roles) : []
                 }
             }), {});
-        console.log(userCache)
     })
 });
 
