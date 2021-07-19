@@ -12,11 +12,11 @@ module.exports.run = async (bot, message, args) => {
         if (userCache[id].rolls > 0) {
             userCache[id].rolls--;
             userCache[id].lastInterval = thisInterval;
-            var character = characters[Math.floor(Math.random() * characters.length)];
+            var character = utils.generateCharacter(message.author);
             roll(message, userCache[id].rolls, character);
         } else {
             var minutesLeft = 59 - date.getMinutes();
-            message.channel.send(`You're out of rolls ${message.author}! Your rolls will reset in **${minutesLeft} ${minutesLeft == 1 ? "minute" : "minutes"}**.`)
+            message.channel.send(`You're out of rolls ${message.author}! Your rolls will reset in **${minutesLeft+1} ${minutesLeft == 1 ? "minute" : "minutes"}**.`)
         }
         //user does not exist in cache
     } else {

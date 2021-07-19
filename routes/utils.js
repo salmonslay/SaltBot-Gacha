@@ -14,3 +14,9 @@ module.exports.getBadges = function getBadges(id) {
         return badges;
     } else return "";
 }
+
+//get a random character with wishlist odds
+module.exports.generateCharacter = function generateCharacter(user) {
+    return characters[Math.floor(Math.random() * characters.length)];
+
+}
