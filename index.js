@@ -1,7 +1,7 @@
 require('dotenv').config();
 Discord = require("discord.js");
 config = require("./config.json");
-roles = require("./roles.json");
+utils = require("./routes/utils.js");
 bot = new Discord.Client();
 var fs = require("fs");
 var mysql2 = require("mysql2");
@@ -65,6 +65,17 @@ connection.connect(function (e) {
             console.log(`Character list loaded. Found ${result.length} entries.`)
         }
     });
+
+    //add roles to userCache
+    connection.query(`SELECT id,roles FROM users`, function (err, result) {
+        userCache = result.reduce(
+            (obj, item) => Object.assign(obj, {
+                [item.id.toString()]: {
+                    roles: item.roles ? JSON.parse(item.roles) : []
+                }
+            }), {});
+        console.log(userCache)
+    })
 });
 
 //Read commands
