@@ -16,15 +16,15 @@ module.exports.parseCharacters = function parseCharacters(message, args, autodel
                 return;
             }
         })
-        if (characters.length > 0 && !invalid) this.addWish(message, characters);
+        if (characters.length > 0 && !invalid) this.addWish(message, characters, autodel);
         else message.channel.send(`${message.author.toString()}, character **${invalid}** could not found.`);
         //no args found, send help
     } else {
         var embed = new Discord.MessageEmbed()
             .setTitle("Wishlisting")
-            .setDescription(`**Syntax**: -wish <character>\n
+            .setDescription(`**Syntax**: -wish <character(s)>\n
         Wishlisted characters will increase your odds of rolling them.\nIf you want to add multiple characters, separate them with a $.\n
-        **-wishlist [user]** will show your wishlist\n**-wishremove <character(s)>** will remove a character from your wishlist`)
+        **-wishlist [user]** will show your wishlist\n**-wishremove <character(s)>** will remove a character from your wishlist\n**-wishd <character(s)>** will wishlist a character and remove the message`)
 
         message.channel.send(embed);
     }
@@ -53,7 +53,9 @@ module.exports.addWish = function addWish(message, characters, autodel) {
 
         connection.query(query, function (err, result) {
             if (err) throw err;
-            message.react("✅")
+
+            if (autodel) message.delete();
+            else message.react("✅")
         })
     })
 }
