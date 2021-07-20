@@ -22,7 +22,7 @@ module.exports.run = async (bot, message, args) => {
                 for (var i = 0; i < myCharacters.length; i++) {
                     if (fixedCharacters.length == (i - (i % 15)) / 15) fixedCharacters.push([]);
 
-                    var prefix = `${(flag.includes("r")) ? `**#${myCharacters[i].likeRank}**` : ""}`
+                    var prefix = `${(flag.includes("r")) ? `**#${myCharacters[i].rank}**` : ""}`
                     var suffix = `**${myCharacters[i].amount}**x`
                     fixedCharacters[(i - (i % 15)) / 15].push(`${prefix} ${myCharacters[i].name} ${suffix}`);
                 }
@@ -37,7 +37,7 @@ module.exports.run = async (bot, message, args) => {
         }
     });
 }
-// characterMap[myCharacters[i].id].likeRank
+// characterMap[myCharacters[i].id].rank
 /* 
 
 DATA SORT
@@ -57,11 +57,11 @@ function sortData(data, flag) {
 
     //rank (1 -> 2 -> 3)
     else if (flag.includes("r") && !flag.includes("r-"))
-        return data.sort(dynamicSort("likeRank"))
+        return data.sort(dynamicSort("rank"))
 
     //rank reversed (3 -> 2 -> 1)
     else if (flag.includes("r-"))
-        return data.sort(dynamicSort("likeRank")).reverse()
+        return data.sort(dynamicSort("rank")).reverse()
 
     //amount  (3 -> 2 -> 1)
     else if (flag.includes("a") && !flag.includes("a-"))

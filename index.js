@@ -41,7 +41,7 @@ connection.connect(function (e) {
     }
     require('./routes/database.js').createTables();
     console.log(`\nConnected to MySQL (${process.env.mysql_database})\n`);
-    connection.query(`SELECT id,parsedName,rawName,nativeName,largeImage,source,characterPage,likes FROM characters ORDER BY likes DESC`, function (err, result) {
+    connection.query(`SELECT id,parsedName,rawName,nativeName,largeImage,source,characterPage,claims FROM characters ORDER BY claims DESC`, function (err, result) {
         if (err) throw err;
         else {
             var i = 1;
@@ -54,8 +54,8 @@ connection.connect(function (e) {
                         nativeName: char.nativeName,
                         image: char.largeImage,
                         source: char.source,
-                        likeRank: i++,
-                        likes: char.likes,
+                        rank: i++,
+                        claims: char.claims,
                         characterPage: char.characterPage
                     }
 

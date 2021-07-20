@@ -12,7 +12,7 @@ function sendChar(message, character) {
     var characterEmbed = new Discord.MessageEmbed()
         .setColor("#a7eec9")
         .setTitle(character.name)
-        .setDescription(`${character.source}\nLike Rank: #${character.likeRank}`)
+        .setDescription(`${character.source}\nClaim Rank: #${character.rank}`)
         .setURL(character.characterPage)
         .setImage(character.image)
 
