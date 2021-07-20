@@ -9,7 +9,7 @@ module.exports.run = async (bot, message, args) => {
         .setTitle("Suggest a character")
         .setDescription(`**Syntax**: -suggest <name>$<source>$[note]
         \n:exclamation: Important: __Attach__ an image to your suggestion message :exclamation:
-        \n**name**: An official name for the character.\n**source**: The character source, use __romanji__ for Japanese titles.\n**note**: Free text to make it easier to verify and add the character, preferrebly a source link.
+        \n**name**: An official name for the character.\n**source**: The character source, use __romanji__ for Japanese titles.\n**note**: Free text to make it easier to verify and add the character, preferrebly a source link.\n**image**: Attach an image in 2:3 aspect ratio, or 225x350px.
         \n**Example submission:**
         `)
         .setImage("https://i.imgur.com/odWAEk7.png")
