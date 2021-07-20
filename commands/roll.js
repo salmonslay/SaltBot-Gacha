@@ -6,7 +6,7 @@ module.exports.run = async (bot, message, args) => {
     //user exists in cache
     if (userCache[id]) {
         //reset rolls if user haven't rolled this hour
-        if (userCache[id].lastInterval != thisInterval) userCache[id].rolls = 10;
+        if (userCache[id].lastInterval != thisInterval) userCache[id].rolls = config.counts.rollsPerHour;
 
         //user got rolls in stock
         if (userCache[id].rolls > 0) {
@@ -15,8 +15,8 @@ module.exports.run = async (bot, message, args) => {
             var character = utils.generateCharacter(message.author);
             roll(message, userCache[id].rolls, character);
         } else {
-            var minutesLeft = 59 - date.getMinutes();
-            message.channel.send(`You're out of rolls ${message.author}! Your rolls will reset in **${minutesLeft+1} ${minutesLeft == 1 ? "minute" : "minutes"}**.`)
+            var minutesLeft = 60 - date.getMinutes();
+            message.channel.send(`You're out of rolls ${message.author}! Your rolls will reset in **${minutesLeft} ${minutesLeft == 1 ? "minute" : "minutes"}**.`)
         }
         //user does not exist in cache
     } else {
