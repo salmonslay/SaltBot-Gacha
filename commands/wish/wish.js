@@ -1,21 +1,36 @@
 module.exports.run = async (bot, message, args) => {
-    var characterNames = args.join(" ").split("$");
-    var characters = [];
-    var invalid;
-    characterNames.forEach(char => {
-        var result = utils.findCharacter(char);
-        if (result.best) characters.push(result.best);
-        else {
-            invalid = char;
-            return;
-        }
-    })
-    if (characters.length > 0 && !invalid) this.addWish(message, characters);
-    else message.channel.send(`${message.author.toString()}, character **${invalid}** could not found.`);
-
+    this.parseCharacters(message, args, false);
 }
 
-module.exports.addWish = function addWish(message, characters) {
+module.exports.parseCharacters = function parseCharacters(message, args, autodel) {
+    //args found, add to wl
+    if (args.length > 0) {
+        var characterNames = args.join(" ").split("$");
+        var characters = [];
+        var invalid;
+        characterNames.forEach(char => {
+            var result = utils.findCharacter(char);
+            if (result.best) characters.push(result.best);
+            else {
+                invalid = char;
+                return;
+            }
+        })
+        if (characters.length > 0 && !invalid) this.addWish(message, characters);
+        else message.channel.send(`${message.author.toString()}, character **${invalid}** could not found.`);
+        //no args found, send help
+    } else {
+        var embed = new Discord.MessageEmbed()
+            .setTitle("Wishlisting")
+            .setDescription(`**Syntax**: -wish <character>\n
+        Wishlisted characters will increase your odds of rolling them.\nIf you want to add multiple characters, separate them with a $.\n
+        **-wishlist [user]** will show your wishlist\n**-wishremove <character(s)>** will remove a character from your wishlist`)
+
+        message.channel.send(embed);
+    }
+}
+
+module.exports.addWish = function addWish(message, characters, autodel) {
     connection.query(`SELECT id,wishlist FROM users WHERE id = ${message.author.id}`, function (err, result) {
         if (err) throw err;
         var wishlist = [];
