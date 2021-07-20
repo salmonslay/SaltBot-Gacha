@@ -22,7 +22,7 @@ module.exports.generateCharacter = function generateCharacter(user) {
 }
 
 module.exports.findCharacter = function findCharacter(query) {
-    query = query.toLowerCase();
+    query = query.toLowerCase().replace(/(\r\n|\n|\r)/gm, "").trim();
 
     //list of potential matches
     var matches = [];
