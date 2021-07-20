@@ -122,6 +122,11 @@ function tryClaim(user, characterID, characterName, myCharacters, message, embed
                 message.edit(newEmbed)
             }
         });
+
+        //add claim to character
+        connection.query(`UPDATE characters SET claims = claims + 1 WHERE id = ${characterID};`, function (err, result) {
+            if (err) throw err;
+        });
     }
 }
 
