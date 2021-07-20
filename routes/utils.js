@@ -58,6 +58,7 @@ module.exports.findCharacter = function findCharacter(query) {
     }
 
     return {
+        query: query,
         matches: matches,
         secondary: secondaryMatches,
         exact: exactMatch,
