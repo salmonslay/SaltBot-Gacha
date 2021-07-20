@@ -1,32 +1,24 @@
 module.exports.run = async (bot, message, args) => {
     var characterNames = args.join(" ").split("$");
     var characters = [];
-    var invalid;
     characterNames.forEach(char => {
         var result = utils.findCharacter(char);
-        if (result.best) characters.push(result.best);
-        else {
-            invalid = char;
-            return;
-        }
+        if (result.best) characters.push(result.best.id);
     })
-    if (characters.length > 0 && !invalid) this.addWish(message, characters);
-    else message.channel.send(`${message.author.toString()}, character **${invalid}** could not found.`);
-
+    this.removeWish(message, characters);
 }
 
-module.exports.addWish = function addWish(message, characters) {
+module.exports.removeWish = function removeWish(message, characters) {
     connection.query(`SELECT id,wishlist FROM users WHERE id = ${message.author.id}`, function (err, result) {
         if (err) throw err;
         var wishlist = [];
         //wishlist already created
         if (result.length > 0 && result[0].wishlist != null) wishlist = JSON.parse(result[0].wishlist);
 
-        characters.forEach(char => {
-            if (wishlist.length < config.counts.wishlistSlots && !wishlist.some(wl => wl.id === char.id)) wishlist.push({
-                id: char.id,
-                lock: false
-            })
+        characters.forEach(id => {
+            wishlist = wishlist.filter(function (wish) {
+                return wish.id != id;
+            });
         })
 
         var query = `
@@ -43,6 +35,6 @@ module.exports.addWish = function addWish(message, characters) {
     })
 }
 module.exports.help = {
-    name: ["wish", "wishadd", "wishlistadd", "addwish", "wladd"],
+    name: ["wishremove", "wishdelete", "wr"],
     dm: true
 }
