@@ -14,7 +14,7 @@ module.exports.run = async (bot, message, args) => {
         })
 
         var wishlist = new Discord.MessageEmbed()
-            .setTitle(`${target.username}'s wishlist`)
+            .setTitle(`${target.username}'s wishlist (${wishlist.length}/${config.counts.wishlistSlots})`)
             .setDescription(characterList == "" ? "*Empty~*" : characterList);
 
         message.channel.send(wishlist);
