@@ -39,5 +39,6 @@ module.exports.run = async (bot, message, args) => {
     })
 }
 module.exports.help = {
-    name: ["profile", "pr"]
+    name: ["profile", "pr"],
+    dm: true
 }

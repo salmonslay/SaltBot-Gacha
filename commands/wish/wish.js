@@ -44,5 +44,6 @@ module.exports.addWish = function addWish(message, characters) {
     })
 }
 module.exports.help = {
-    name: ["wish", "wishadd", "wishlistadd", "addwish", "wladd"]
+    name: ["wish", "wishadd", "wishlistadd", "addwish", "wladd"],
+    dm: true
 }

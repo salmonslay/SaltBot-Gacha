@@ -19,5 +19,6 @@ function sendChar(message, character) {
     message.channel.send(characterEmbed)
 }
 module.exports.help = {
-    name: ["infomarry", "im"]
+    name: ["infomarry", "im"],
+    dm: true
 }

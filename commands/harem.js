@@ -138,5 +138,6 @@ module.exports.updatePage = function updatePage(message, user, embed, reaction) 
 
 
 module.exports.help = {
-    name: ["mm", "harem", "characters", "mym"]
+    name: ["mm", "harem", "characters", "mym"],
+    dm: true
 }

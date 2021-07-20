@@ -74,5 +74,6 @@ module.exports.setPage = function (message, embed, reaction) {
 
 
 module.exports.help = {
-    name: ["lb"]
+    name: ["lb"],
+    dm: true
 }

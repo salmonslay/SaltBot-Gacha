@@ -57,5 +57,6 @@ module.exports.setPage = function (message, embed, reaction) {
 
 
 module.exports.help = {
-    name: ["top"]
+    name: ["top"],
+    dm: true
 }

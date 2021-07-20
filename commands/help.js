@@ -26,5 +26,6 @@ var help = new Discord.MessageEmbed()
 `)
 
 module.exports.help = {
-    name: ["help"]
+    name: ["help"],
+    dm: true
 }

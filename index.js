@@ -151,10 +151,12 @@ bot.on("message", message => {
     let args = messageArray.slice(1);
 
     let commandfile = bot.commands.get(cmd.slice(prefix.length));
+
     if (cmd.slice(prefix.length).startsWith("mm")) bot.commands.get("mm").run(bot, message, messageArray);
     else if (cmd.slice(prefix.length).startsWith("lb")) bot.commands.get("lb").run(bot, message, messageArray);
 
-    else if (commandfile) commandfile.run(bot, message, args);
+    //only run command if channel type is NOT dm or if command allows dm
+    else if (commandfile && (message.channel.type != "dm" || commandfile.help.dm)) commandfile.run(bot, message, args);
 
 });
 

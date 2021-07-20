@@ -11,5 +11,6 @@ module.exports.run = async (bot, message, args) => {
     else message.channel.send(result.text);
 }
 module.exports.help = {
-    name: ["forceroll", "fr"]
+    name: ["forceroll", "fr"],
+    dm: false
 }

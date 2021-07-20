@@ -53,5 +53,6 @@ module.exports.submit = function submit(message, embed) {
     message.channel.send(`Thank you for your suggestion! We will try to get back to you soon.`)
 }
 module.exports.help = {
-    name: ["suggest", "suggestion"]
+    name: ["suggest", "suggestion"],
+    dm: true
 }

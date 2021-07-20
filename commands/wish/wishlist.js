@@ -22,5 +22,6 @@ module.exports.run = async (bot, message, args) => {
 }
 
 module.exports.help = {
-    name: ["wl", "wishlist"]
+    name: ["wl", "wishlist"],
+    dm: true
 }
