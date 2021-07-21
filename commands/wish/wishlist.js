@@ -10,7 +10,10 @@ module.exports.run = async (bot, message, args) => {
 
         var characterList = "";
         wishlist.forEach(wish => {
-            characterList += `${characterMap[wish.id].name} ${wish.lock ? "🔒" : ""} ${characters.some(char => char.id == wish.id) ? "✅" : ""}\n`
+            var entry = characterMap[wish.id];
+            if (entry) {
+                characterList += `${characterMap[wish.id].name} ${wish.lock ? "🔒" : ""} ${characters.some(char => char.id == wish.id) ? "✅" : ""}\n`
+            }
         })
 
         var wishlist = new Discord.MessageEmbed()
