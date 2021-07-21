@@ -6,13 +6,13 @@ module.exports.run = async (bot, message, args) => {
     var free = args.slice(2).join(' ');
     if (args[0].trim() == '' && args.length == 1) {
         var help = new Discord.MessageEmbed()
-        .setTitle("Suggest a character")
-        .setDescription(`**Syntax**: -suggest <name>$<source>$[note]
+            .setTitle("Suggest a character")
+            .setDescription(`**Syntax**: -suggest <name>$<source>$[note]
         \n:exclamation: Important: __Attach__ an image to your suggestion message :exclamation:
         \n**name**: An official name for the character.\n**source**: The character source, use __romanji__ for Japanese titles.\n**note**: Free text to make it easier to verify and add the character, preferrebly a source link.\n**image**: Attach an image in 2:3 aspect ratio, or 225x350px.
         \n**Example submission:**
         `)
-        .setImage("https://i.imgur.com/odWAEk7.png")
+            .setImage("https://i.imgur.com/odWAEk7.png")
 
         message.channel.send(help)
     } else if (message.attachments.size > 0 && args.length > 1) {
@@ -29,7 +29,9 @@ module.exports.run = async (bot, message, args) => {
         message.channel.send(`This is your submission. Edit it if you feel like, or **react with :airplane:** to submit it.`, {
             embed: embed,
         }).then(msg => {
-            messageInfo[msg.id.toString()] = "suggestion";
+            messageInfo[msg.id.toString()] = {
+                type: "suggestion"
+            };
             msg.react('✈');
         })
     } else {
