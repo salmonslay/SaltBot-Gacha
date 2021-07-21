@@ -68,11 +68,12 @@ connection.connect(function (e) {
     });
 
     //add roles to userCache
-    connection.query(`SELECT id,roles FROM users`, function (err, result) {
+    connection.query(`SELECT id,roles,wishlist FROM users`, function (err, result) {
         userCache = result.reduce(
             (obj, item) => Object.assign(obj, {
                 [item.id.toString()]: {
-                    roles: item.roles ? JSON.parse(item.roles) : []
+                    roles: item.roles ? JSON.parse(item.roles) : [],
+                    wishlist: item.wishlist ? JSON.parse(item.wishlist) : []
                 }
             }), {});
     })

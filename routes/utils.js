@@ -17,8 +17,16 @@ module.exports.getBadges = function getBadges(id) {
 
 //get a random character with wishlist odds
 module.exports.generateCharacter = function generateCharacter(user) {
-    return characters[Math.floor(Math.random() * characters.length)];
+    if (userCache[user.id]) {
+        var wishlist = userCache[user.id].wishlist;
+        if (wishlist.length / characters.length * config.counts.wishlistOdds > Math.random()) {
+            var wishedCharacter = characterMap[wishlist[Math.floor(Math.random() * wishlist.length)].id];
+            if (wishedCharacter){}
+                return wishedCharacter;
+        }
+    }
 
+    return characters[Math.floor(Math.random() * characters.length)];
 }
 
 module.exports.findCharacter = function findCharacter(query) {

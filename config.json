@@ -15,6 +15,7 @@
 
   "counts": {
     "rollsPerHour": 10,
-    "wishlistSlots": 10
+    "wishlistSlots": 10,
+    "wishlistOdds": 1.5
   }
 }

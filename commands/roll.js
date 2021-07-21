@@ -24,7 +24,7 @@ module.exports.run = async (bot, message, args) => {
             rolls: 9,
             lastInterval: thisInterval
         }
-        roll(message, 9, characters[Math.floor(Math.random() * characters.length)]);
+        utils.generateCharacter(message.author);
     }
 }
 
