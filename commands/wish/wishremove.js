@@ -1,11 +1,5 @@
 module.exports.run = async (bot, message, args) => {
-    var characterNames = args.join(" ").split("$");
-    var characters = [];
-    characterNames.forEach(char => {
-        var result = utils.findCharacter(char);
-        if (result.best) characters.push(result.best.id);
-    })
-    this.removeWish(message, characters);
+    this.removeWish(message, utils.parseCharacters(args).characters);
 }
 
 module.exports.removeWish = function removeWish(message, characters) {
@@ -15,9 +9,9 @@ module.exports.removeWish = function removeWish(message, characters) {
         //wishlist already created
         if (result.length > 0 && result[0].wishlist != null) wishlist = JSON.parse(result[0].wishlist);
 
-        characters.forEach(id => {
+        characters.forEach(char => {
             wishlist = wishlist.filter(function (wish) {
-                return wish.id != id;
+                return wish.id != char.id;
             });
         })
 

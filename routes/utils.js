@@ -21,8 +21,8 @@ module.exports.generateCharacter = function generateCharacter(user) {
         var wishlist = userCache[user.id].wishlist;
         if (wishlist.length / characters.length * config.counts.wishlistOdds > Math.random()) {
             var wishedCharacter = characterMap[wishlist[Math.floor(Math.random() * wishlist.length)].id];
-            if (wishedCharacter){}
-                return wishedCharacter;
+            if (wishedCharacter) {}
+            return wishedCharacter;
         }
     }
 
@@ -72,5 +72,22 @@ module.exports.findCharacter = function findCharacter(query) {
         exact: exactMatch,
         best: bestGuess,
         text: text
+    }
+}
+
+module.exports.parseCharacters = function parseCharacters(args) {
+    var characterNames = args.join(" ").split("$");
+    var characters = [];
+    var invalids = [];
+
+    characterNames.forEach(char => {
+        var result = this.findCharacter(char);
+        if (result.best) characters.push(result.best);
+        else invalids.push(char);
+    })
+    
+    return {
+        characters: characters,
+        invalids: invalids
     }
 }

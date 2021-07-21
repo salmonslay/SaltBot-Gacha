@@ -5,19 +5,9 @@ module.exports.run = async (bot, message, args) => {
 module.exports.parseCharacters = function parseCharacters(message, args, autodel) {
     //args found, add to wl
     if (args.length > 0) {
-        var characterNames = args.join(" ").split("$");
-        var characters = [];
-        var invalid;
-        characterNames.forEach(char => {
-            var result = utils.findCharacter(char);
-            if (result.best) characters.push(result.best);
-            else {
-                invalid = char;
-                return;
-            }
-        })
-        if (characters.length > 0 && !invalid) this.addWish(message, characters, autodel);
-        else message.channel.send(`${message.author.toString()}, character **${invalid}** could not found.`);
+        var result = utils.parseCharacters(args);
+        if (result.characters.length > 0 && result.invalids.length == 0) this.addWish(message, result.characters, autodel);
+        else message.channel.send(`${message.author.toString()}, character **${result.invalids[0]}** could not found.`);
         //no args found, send help
     } else {
         var embed = new Discord.MessageEmbed()
