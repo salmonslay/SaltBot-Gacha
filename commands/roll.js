@@ -4,23 +4,23 @@ module.exports.run = async (bot, message, args) => {
     var thisInterval = `${date.getDay()}-${date.getHours()}`;
 
     //user exists in cache
-    if (userCache[id]) {
+    if (gacha.userCache[id]) {
         //reset rolls if user haven't rolled this hour
-        if (userCache[id].lastInterval != thisInterval) userCache[id].rolls = config.counts.rollsPerHour;
+        if (gacha.userCache[id].lastInterval != thisInterval) gacha.userCache[id].rolls = config.counts.rollsPerHour;
 
         //user got rolls in stock
-        if (userCache[id].rolls > 0) {
-            userCache[id].rolls--;
-            userCache[id].lastInterval = thisInterval;
+        if (gacha.userCache[id].rolls > 0) {
+            gacha.userCache[id].rolls--;
+            gacha.userCache[id].lastInterval = thisInterval;
             var character = utils.generateCharacter(message.author);
-            roll(message, userCache[id].rolls, character);
+            roll(message, gacha.userCache[id].rolls, character);
         } else {
             var minutesLeft = 60 - date.getMinutes();
             message.channel.send(`You're out of rolls ${message.author}! Your rolls will reset in **${minutesLeft} ${minutesLeft == 1 ? "minute" : "minutes"}**.`)
         }
         //user does not exist in cache
     } else {
-        userCache[id] = {
+        gacha.userCache[id] = {
             rolls: 9,
             lastInterval: thisInterval
         }
@@ -37,9 +37,10 @@ var roll = function (message, left, character) {
         .setFooter("React to claim! " + left)
 
     message.channel.send(characterEmbed).then(msg => {
-        messageInfo[msg.id] = {
+        gacha.messageInfo[msg.id] = {
             type: "roll",
-            id: character.id
+            id: character.id,
+            claimed:false
         };
         msg.react('❤')
     })
@@ -48,9 +49,9 @@ module.exports.roll = roll;
 
 //Processes a claim reaction; checks if anyone was quicker, checks if claim is up etc
 module.exports.processClaim = function processClaim(message, user, embed) {
-    var claimedId = messageInfo[message.id].id;
+    var claimedId = gacha.messageInfo[message.id].id;
     var claimedName = embed.title;
-    if (!claimedIds.includes(message.id)) {
+    if (!gacha.messageInfo[message.id].claimed) {
 
         connection.query(`SELECT hasClaimed,characters FROM users WHERE id = '${user.id}'`, function (err, result) {
             if (err) throw err;
@@ -68,8 +69,8 @@ module.exports.processClaim = function processClaim(message, user, embed) {
 
 //Tries to actually claim a character after verifying in processClaim() that user got claim 
 function tryClaim(user, characterID, characterName, myCharacters, message, embed) {
-    if (!claimedIds.includes(message.id)) {
-        claimedIds.push(message.id);
+    if (!gacha.messageInfo[message.id].claimed) {
+        gacha.messageInfo[message.id].claimed = true;
 
         message.channel.send(`**${user.username}** claimed **${characterName}:heart_exclamation:**`);
 

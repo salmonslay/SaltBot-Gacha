@@ -29,7 +29,7 @@ module.exports.run = async (bot, message, args) => {
         message.channel.send(`This is your submission. Edit it if you feel like, or **react with :airplane:** to submit it.`, {
             embed: embed,
         }).then(msg => {
-            messageInfo[msg.id.toString()] = {
+            gacha.messageInfo[msg.id.toString()] = {
                 type: "suggestion"
             };
             msg.react('✈');

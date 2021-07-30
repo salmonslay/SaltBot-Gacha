@@ -11,7 +11,7 @@ module.exports.run = async (bot, message, args) => {
             if (result.length > 0 && result[0].characters != "[]") {
                 var myCharacters = [];
                 JSON.parse(result[0].characters).forEach(char => {
-                    var entry = characterMap[char.id];
+                    var entry = gacha.characterMap[char.id];
                     if (entry) {
                         entry.amount = char.amount;
                         myCharacters.push(entry);
@@ -27,7 +27,7 @@ module.exports.run = async (bot, message, args) => {
                     fixedCharacters[(i - (i % 15)) / 15].push(`${prefix} ${myCharacters[i].name} ${suffix}`);
                 }
                 if (myCharacters.length > 0)
-                    createEmbed(target, fixedCharacters[0], message, fixedCharacters, characterMap[myCharacters[0].id.toString()].image);
+                    createEmbed(target, fixedCharacters[0], message, fixedCharacters, gacha.characterMap[myCharacters[0].id.toString()].image);
                 else
                     createEmbed(target, ["*So empty ~*"], message, fixedCharacters, "https://i.imgur.com/ILbATq4.jpg");
 
@@ -105,19 +105,19 @@ function createEmbed(user, data, message, fixedCharacters, link) {
         .setFooter(`Page 1/${fixedCharacters.length}`)
     message.channel.send(characterEmbed).then(msg => {
         if (fixedCharacters.length > 1) msg.react("⬅️").then(() => msg.react("➡️"))
-        messageInfo[msg.id] = {
+        gacha.messageInfo[msg.id] = {
             type: "mm",
             user: user.id,
             page: 0
         };
-        haremCache[msg.id] = fixedCharacters;
+        gacha.haremCache[msg.id] = fixedCharacters;
     })
 }
 
 //Updates harem embed
 module.exports.updatePage = function updatePage(message, user, embed, reaction) {
-    var currentPage = messageInfo[message.id].page;
-    var characters = haremCache[message.id];
+    var currentPage = gacha.messageInfo[message.id].page;
+    var characters = gacha.haremCache[message.id];
 
     if (reaction._emoji.name == "⬅️") currentPage--;
     else if (reaction._emoji.name = "➡️") currentPage++;
@@ -131,7 +131,7 @@ module.exports.updatePage = function updatePage(message, user, embed, reaction) 
         .setDescription(characters[currentPage])
         .setFooter(`Page ${currentPage+1}/${characters.length}`)
         .setThumbnail(embed.thumbnail.url)
-    messageInfo[message.id].page = currentPage;
+    gacha.messageInfo[message.id].page = currentPage;
 
     message.edit(newEmbed)
 }

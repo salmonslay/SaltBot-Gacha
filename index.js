@@ -19,21 +19,21 @@ connection = mysql2.createConnection({
     database: process.env.mysql_database
 });
 
-//characters
-characters = [];
-characterMap = [];
 
-//roll messages that are claimed
-claimedIds = [];
+gacha = {
+    //characters
+    characters: [],
+    characterMap: [],
 
-//saves an users harem
-haremCache = [];
+    //saves an users harem
+    haremCache: [],
 
-//saves user info from mysql
-userCache = [];
+    //saves user info from mysql
+    userCache: [],
 
-//Holds info about what a message is doing
-messageInfo = [];
+    //Holds info about what a message is doing
+    messageInfo: []
+}
 
 connection.connect(function (e) {
     if (e) {
@@ -46,7 +46,7 @@ connection.connect(function (e) {
         else {
             var i = 1;
             result.forEach(char => {
-                if (!characterMap[char.id.toString()]) {
+                if (!gacha.characterMap[char.id.toString()]) {
                     var fixedCharacter = {
                         id: char.id,
                         name: char.parsedName,
@@ -59,11 +59,11 @@ connection.connect(function (e) {
                         characterPage: char.characterPage
                     }
 
-                    characters.push(fixedCharacter);
-                    characterMap[char.id.toString()] = fixedCharacter;
+                    gacha.characters.push(fixedCharacter);
+                    gacha.characterMap[char.id.toString()] = fixedCharacter;
                 }
             })
-            console.log(`Character list loaded. Found ${characters.length} entries.`)
+            console.log(`Character list loaded. Found ${gacha.characters.length} entries.`)
         }
     });
 
@@ -113,19 +113,19 @@ bot.on('messageReactionAdd', (reaction, user) => {
         var embed = message.embeds[0];
 
         //r
-        if (messageInfo[message.id].type == "roll" && time < 60000) bot.commands.get("roll").processClaim(message, user, embed, reaction)
+        if (gacha.messageInfo[message.id].type == "roll" && time < 60000) bot.commands.get("roll").processClaim(message, user, embed, reaction)
 
         //update harem (mm)
-        else if (messageInfo[message.id].type == "mm") bot.commands.get("mm").updatePage(message, user, embed, reaction)
+        else if (gacha.messageInfo[message.id].type == "mm") bot.commands.get("mm").updatePage(message, user, embed, reaction)
 
         //update top characters (top)
-        if (messageInfo[message.id].type == "top") bot.commands.get("top").setPage(message, embed, reaction)
+        if (gacha.messageInfo[message.id].type == "top") bot.commands.get("top").setPage(message, embed, reaction)
 
         //update top characters (top)
-        if (messageInfo[message.id].type == "suggestion") bot.commands.get("suggest").submit(message, embed)
+        if (gacha.messageInfo[message.id].type == "suggestion") bot.commands.get("suggest").submit(message, embed)
 
         //update leaderboard page (lb)
-        if (messageInfo[message.id].type == "leaderboard") bot.commands.get("leaderboard").setPage(message, embed, reaction)
+        if (gacha.messageInfo[message.id].type == "leaderboard") bot.commands.get("leaderboard").setPage(message, embed, reaction)
     }
 });
 
@@ -138,13 +138,13 @@ bot.on('messageReactionRemove', (reaction, user) => {
         var embed = message.embeds[0];
 
         //update harem (mm)
-        if (messageInfo[message.id].type == "mm") bot.commands.get("mm").updatePage(message, user, embed, reaction)
+        if (gacha.messageInfo[message.id].type == "mm") bot.commands.get("mm").updatePage(message, user, embed, reaction)
 
         //update top characters (top)
-        if (messageInfo[message.id].type == "top") bot.commands.get("top").setPage(message, embed, reaction)
+        if (gacha.messageInfo[message.id].type == "top") bot.commands.get("top").setPage(message, embed, reaction)
 
         //update leaderboard page (lb)
-        if (messageInfo[message.id].type == "leaderboard") bot.commands.get("leaderboard").setPage(message, embed, reaction)
+        if (gacha.messageInfo[message.id].type == "leaderboard") bot.commands.get("leaderboard").setPage(message, embed, reaction)
     }
 });
 

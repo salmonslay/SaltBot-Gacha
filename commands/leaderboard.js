@@ -55,7 +55,7 @@ function createEmbed(message, page, edit, flag) {
     if (!edit)
         message.channel.send(topEmbed).then(msg => {
             msg.react("⬅️").then(() => msg.react("➡️"))
-            messageInfo[msg.id] = {
+            gacha.messageInfo[msg.id] = {
                 type: "leaderboard",
                 page: page,
                 flag: flag
@@ -63,15 +63,15 @@ function createEmbed(message, page, edit, flag) {
         })
     else {
         message.edit(topEmbed);
-        messageInfo[message.id].page = page
+        gacha.messageInfo[message.id].page = page
     }
 }
 
 
 //gets an existing top-embed and changes page on it
 module.exports.setPage = function (message, embed, reaction) {
-    var currentPage = messageInfo[message.id].page;
-    var flag = messageInfo.flag;
+    var currentPage = gacha.messageInfo[message.id].page;
+    var flag = gacha.messageInfo.flag;
     if (reaction._emoji.name == "⬅️") currentPage--;
     else if (reaction._emoji.name = "➡️") currentPage++;
 

@@ -11,8 +11,8 @@ module.exports.run = async (bot, message, args) => {
             //user found
             if (result.length > 0) {
                 var characters = JSON.parse(result[0].characters);
-                if (characterMap[characters[0].id])
-                    header = characterMap[characters[0].id.toString()].image;
+                if (gacha.characterMap[characters[0].id])
+                    header = gacha.characterMap[characters[0].id.toString()].image;
                 characters.forEach(char => {
                     unique++;
                     total += char.amount;

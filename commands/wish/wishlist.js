@@ -10,9 +10,9 @@ module.exports.run = async (bot, message, args) => {
 
         var characterList = "";
         wishlist.forEach(wish => {
-            var entry = characterMap[wish.id];
+            var entry = gacha.characterMap[wish.id];
             if (entry) {
-                characterList += `${characterMap[wish.id].name} ${wish.lock ? "🔒" : ""} ${characters.some(char => char.id == wish.id) ? "✅" : ""}\n`
+                characterList += `${gacha.characterMap[wish.id].name} ${wish.lock ? "🔒" : ""} ${characters.some(char => char.id == wish.id) ? "✅" : ""}\n`
             }
         })
 

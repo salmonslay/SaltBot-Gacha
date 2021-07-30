@@ -19,14 +19,14 @@ module.exports.getBadges = function getBadges(id) {
 module.exports.generateCharacter = function generateCharacter(user) {
     if (userCache[user.id]) {
         var wishlist = userCache[user.id].wishlist;
-        if (wishlist.length / characters.length * config.counts.wishlistOdds > Math.random()) {
-            var wishedCharacter = characterMap[wishlist[Math.floor(Math.random() * wishlist.length)].id];
+        if (wishlist.length / gacha.characters.length * config.counts.wishlistOdds > Math.random()) {
+            var wishedCharacter = gacha.characterMap[wishlist[Math.floor(Math.random() * wishlist.length)].id];
             if (wishedCharacter) {}
             return wishedCharacter;
         }
     }
 
-    return characters[Math.floor(Math.random() * characters.length)];
+    return characters[Math.floor(Math.random() * gacha.characters.length)];
 }
 
 module.exports.findCharacter = function findCharacter(query) {
@@ -42,7 +42,7 @@ module.exports.findCharacter = function findCharacter(query) {
     var bestGuess;
 
     ///Checks through all characters till a direct match is found
-    characters.some(char => {
+    gacha.characters.some(char => {
         var parsedName = char.name.toLowerCase();
         var rawName = char.rawName.toLowerCase().replace(",", "");
         if (parsedName == query || rawName == query || char.nativeName == query) { //direct match found
