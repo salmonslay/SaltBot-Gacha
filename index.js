@@ -2,7 +2,9 @@ require('dotenv').config();
 Discord = require("discord.js");
 config = require("./config.json");
 utils = require("./routes/utils.js");
-bot = new Discord.Client();
+bot = new Discord.Client({
+    intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'DIRECT_MESSAGES']
+});
 var fs = require("fs");
 var mysql2 = require("mysql2");
 var schedule = require('node-schedule');
@@ -149,7 +151,7 @@ bot.on('messageReactionRemove', (reaction, user) => {
 });
 
 //Command detection
-bot.on("message", message => {
+bot.on("messageCreate", message => {
     if (message.author.bot) return;
     let prefix = config.prefix;
     if (message.content.indexOf(prefix) !== 0) return;

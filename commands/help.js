@@ -1,6 +1,8 @@
 module.exports.run = async (bot, message, args) => {
 
-    message.author.send(help);
+    message.author.send({
+        embeds: [help]
+    });
     message.react("📫")
 }
 

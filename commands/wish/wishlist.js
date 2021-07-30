@@ -20,7 +20,9 @@ module.exports.run = async (bot, message, args) => {
             .setTitle(`${target.username}'s wishlist (${wishlist.length}/${config.counts.wishlistSlots})`)
             .setDescription(characterList == "" ? "*Empty~*" : characterList);
 
-        message.channel.send(wishlist);
+        message.channel.send({
+            embeds: [wishlist]
+        });
     })
 }
 

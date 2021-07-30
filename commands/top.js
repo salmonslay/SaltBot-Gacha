@@ -29,7 +29,9 @@ function createEmbed(message, page, edit) {
         .setFooter(`Page ${page}`)
 
     if (!edit)
-        message.channel.send(topEmbed).then(msg => {
+        message.channel.send({
+            embeds: [topEmbed]
+        }).then(msg => {
             msg.react("⬅️").then(() => msg.react("➡️"))
             gacha.messageInfo[msg.id] = {
                 type: "top",
@@ -38,7 +40,9 @@ function createEmbed(message, page, edit) {
         })
     else {
         gacha.messageInfo[message.id].page = page;
-        message.edit(topEmbed);
+        message.edit({
+            embeds: [topEmbed]
+        });
     }
 
 

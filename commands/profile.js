@@ -34,7 +34,9 @@ module.exports.run = async (bot, message, args) => {
                 \n${utils.getBadges(target.id)}
                 `)
 
-            message.channel.send(characterEmbed)
+            message.channel.send({
+                embeds: [characterEmbed]
+            })
         }
     })
 }

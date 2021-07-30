@@ -16,7 +16,9 @@ function sendChar(message, character) {
         .setURL(character.characterPage)
         .setImage(character.image)
 
-    message.channel.send(characterEmbed)
+    message.channel.send({
+        embeds: [characterEmbed]
+    })
 }
 module.exports.help = {
     name: ["infomarry", "im"],

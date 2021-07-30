@@ -100,10 +100,12 @@ function createEmbed(user, data, message, fixedCharacters, link) {
     var characterEmbed = new Discord.MessageEmbed()
         .setColor("DARK_RED")
         .setTitle(`${user.username}'s harem`)
-        .setDescription(data)
+        .setDescription(data.join("\n"))
         .setThumbnail(`${link}`)
         .setFooter(`Page 1/${fixedCharacters.length}`)
-    message.channel.send(characterEmbed).then(msg => {
+    message.channel.send({
+        embeds: [characterEmbed]
+    }).then(msg => {
         if (fixedCharacters.length > 1) msg.react("⬅️").then(() => msg.react("➡️"))
         gacha.messageInfo[msg.id] = {
             type: "mm",
@@ -128,12 +130,14 @@ module.exports.updatePage = function updatePage(message, user, embed, reaction) 
     var newEmbed = new Discord.MessageEmbed()
         .setColor("DARK_RED")
         .setTitle(embed.title)
-        .setDescription(characters[currentPage])
+        .setDescription(characters[currentPage].join("\n"))
         .setFooter(`Page ${currentPage+1}/${characters.length}`)
         .setThumbnail(embed.thumbnail.url)
     gacha.messageInfo[message.id].page = currentPage;
 
-    message.edit(newEmbed)
+    message.edit({
+        embeds: [newEmbed]
+    })
 }
 
 

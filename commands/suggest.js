@@ -14,7 +14,9 @@ module.exports.run = async (bot, message, args) => {
         `)
             .setImage("https://i.imgur.com/odWAEk7.png")
 
-        message.channel.send(help)
+        message.channel.send({
+            embeds: [help]
+        })
     } else if (message.attachments.size > 0 && args.length > 1) {
         var image = (message.attachments).array()[0].url;
 
@@ -26,8 +28,9 @@ module.exports.run = async (bot, message, args) => {
             .setImage(`${image}#${message.author.id}`)
             //.addField("Message", `${message}\n${attachments}`)
             .setFooter(free)
-        message.channel.send(`This is your submission. Edit it if you feel like, or **react with :airplane:** to submit it.`, {
-            embed: embed,
+        message.channel.send({
+            content: 'This is your submission. Edit it if you feel like, or **react with :airplane:** to submit it.',
+            embeds: [embed],
         }).then(msg => {
             gacha.messageInfo[msg.id.toString()] = {
                 type: "suggestion"
@@ -41,7 +44,6 @@ module.exports.run = async (bot, message, args) => {
 
 //Processes a claim reaction; checks if anyone was quicker, checks if claim is up etc
 module.exports.submit = function submit(message, embed) {
-    console.log(embed)
     var suggestion = new Discord.MessageEmbed()
         .setAuthor(embed.author.name, embed.author.iconURL)
         .setTitle(embed.title)
@@ -49,8 +51,10 @@ module.exports.submit = function submit(message, embed) {
         .setImage(embed.image.url)
         .addField("Dev-link", `http://localhost:3000/add?name=${encodeURIComponent(embed.title)}&source=${encodeURIComponent(embed.description)}&pic=${encodeURIComponent(embed.image.url)}`)
         .setFooter(embed.footer.text);
-    bot.channels.cache.get(config.channels.suggestions).send(`${embed.author.name}\n<@${embed.image.url.split("#")[1]}>`, {
-        embed: suggestion,
+
+    bot.channels.cache.get(config.channels.suggestions).send({
+        content: `${embed.author.name}\n<@${embed.image.url.split("#")[1]}>`,
+        embeds: [suggestion],
     })
     message.channel.send(`Thank you for your suggestion! We will try to get back to you soon.`)
 }
