@@ -123,6 +123,9 @@ bot.on('messageReactionAdd', (reaction, user) => {
 
         //update top characters (top)
         if (messageInfo[message.id].type == "suggestion") bot.commands.get("suggest").submit(message, embed)
+
+        //update leaderboard page (lb)
+        if (messageInfo[message.id].type == "leaderboard") bot.commands.get("leaderboard").setPage(message, embed, reaction)
     }
 });
 
@@ -139,6 +142,9 @@ bot.on('messageReactionRemove', (reaction, user) => {
 
         //update top characters (top)
         if (messageInfo[message.id].type == "top") bot.commands.get("top").setPage(message, embed, reaction)
+
+        //update leaderboard page (lb)
+        if (messageInfo[message.id].type == "leaderboard") bot.commands.get("leaderboard").setPage(message, embed, reaction)
     }
 });
 
@@ -155,6 +161,7 @@ bot.on("message", message => {
 
     if (cmd.slice(prefix.length).startsWith("mm")) bot.commands.get("mm").run(bot, message, messageArray);
     else if (cmd.slice(prefix.length).startsWith("lb")) bot.commands.get("lb").run(bot, message, messageArray);
+    else if (cmd.slice(prefix.length).startsWith("leaderboard")) bot.commands.get("leaderboard").run(bot, message, messageArray);
 
     //only run command if channel type is NOT dm or if command allows dm
     else if (commandfile && (message.channel.type != "dm" || commandfile.help.dm)) commandfile.run(bot, message, args);

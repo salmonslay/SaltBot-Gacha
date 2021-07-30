@@ -1,5 +1,8 @@
 module.exports.run = async (bot, message, args) => {
-    let flag = args[0].replace("-lb", "").toLowerCase();
+    let flag = args[0]
+        .replace("-lb", "")
+        .replace("-leaderboard", "")
+        .toLowerCase();
     checkData(message, parseInt(args[0]), false, flag)
 }
 var usersCache = {};
@@ -34,9 +37,10 @@ function createEmbed(message, page, edit, flag) {
     else if (page < 1) page = 1000;
 
     //check if characters are enough, else take last page
-    if (page * 15 > data.length) page = Math.round(data.length / 15)
+    var perPage = 15;
+    if (page * perPage > data.length) page = Math.round(data.length / perPage)
 
-    for (var i = (page - 1) * 15; i < (page - 1) * 15 + 15; i++) {
+    for (var i = (page - 1) * perPage; i < (page - 1) * perPage + perPage; i++) {
         if (data[i])
             pageList += `**#${i+1}** - ${data[i].username}: **${data[i][mode]}**\n`;
     }
@@ -52,18 +56,21 @@ function createEmbed(message, page, edit, flag) {
         message.channel.send(topEmbed).then(msg => {
             msg.react("⬅️").then(() => msg.react("➡️"))
             messageInfo[msg.id] = {
-                type: "top",
+                type: "leaderboard",
                 page: page,
                 flag: flag
             };
         })
-    else message.edit(topEmbed);
+    else {
+        message.edit(topEmbed);
+        messageInfo[message.id].page = page
+    }
 }
 
 
 //gets an existing top-embed and changes page on it
 module.exports.setPage = function (message, embed, reaction) {
-    var currentPage = messageInfo.page;
+    var currentPage = messageInfo[message.id].page;
     var flag = messageInfo.flag;
     if (reaction._emoji.name == "⬅️") currentPage--;
     else if (reaction._emoji.name = "➡️") currentPage++;
@@ -74,6 +81,6 @@ module.exports.setPage = function (message, embed, reaction) {
 
 
 module.exports.help = {
-    name: ["lb"],
+    name: ["lb", "leaderboard"],
     dm: true
 }
