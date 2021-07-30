@@ -24,7 +24,8 @@ module.exports.run = async (bot, message, args) => {
             rolls: 9,
             lastInterval: thisInterval
         }
-        utils.generateCharacter(message.author);
+        var character = utils.generateCharacter(message.author);
+        roll(message, gacha.userCache[id].rolls, character);
     }
 }
 
