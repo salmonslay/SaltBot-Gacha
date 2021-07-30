@@ -26,7 +26,7 @@ module.exports.generateCharacter = function generateCharacter(user) {
         }
     }
 
-    return characters[Math.floor(Math.random() * gacha.characters.length)];
+    return gacha.characters[Math.floor(Math.random() * gacha.characters.length)];
 }
 
 module.exports.findCharacter = function findCharacter(query) {
