@@ -1,4 +1,3 @@
-const isImageUrl = require('is-image-url');
 module.exports.run = async (bot, message, args) => {
     var args = args.join(' ').split('$');
     var name = args[0];
@@ -32,8 +31,9 @@ module.exports.run = async (bot, message, args) => {
             content: 'This is your submission. Edit it if you feel like, or **react with :airplane:** to submit it.',
             embeds: [embed],
         }).then(msg => {
-            gacha.messageInfo[msg.id.toString()] = {
-                type: "suggestion"
+            gacha.messageInfo[msg.id] = {
+                type: "suggestion",
+                sent: false
             };
             msg.react('✈');
         })
@@ -44,19 +44,23 @@ module.exports.run = async (bot, message, args) => {
 
 //Processes a claim reaction; checks if anyone was quicker, checks if claim is up etc
 module.exports.submit = function submit(message, embed) {
-    var suggestion = new Discord.MessageEmbed()
-        .setAuthor(embed.author.name, embed.author.iconURL)
-        .setTitle(embed.title)
-        .setDescription(embed.description)
-        .setImage(embed.image.url)
-        .addField("Dev-link", `http://localhost:3000/add?name=${encodeURIComponent(embed.title)}&source=${encodeURIComponent(embed.description)}&pic=${encodeURIComponent(embed.image.url)}`)
-        .setFooter(embed.footer.text);
+    if (!gacha.messageInfo[message.id].sent) {
+        gacha.messageInfo[message.id].sent = true;
+        var userID = embed.image.url.split("#")[1];
+        var suggestion = new Discord.MessageEmbed()
+            .setAuthor(embed.author.name, embed.author.iconURL)
+            .setTitle(embed.title)
+            .setDescription(embed.description)
+            .setImage(embed.image.url)
+            .addField("Dev-link", `http://localhost:3000/add?name=${encodeURIComponent(embed.title)}&source=${encodeURIComponent(embed.description)}&pic=${encodeURIComponent(embed.image.url)}`)
+            .setFooter(embed.footer.text);
 
-    bot.channels.cache.get(config.channels.suggestions).send({
-        content: `${embed.author.name}\n<@${embed.image.url.split("#")[1]}>`,
-        embeds: [suggestion],
-    })
-    message.channel.send(`Thank you for your suggestion! We will try to get back to you soon.`)
+        bot.channels.cache.get(config.channels.suggestions).send({
+            content: `${embed.author.name}\n<@${userID}> ${userID}`,
+            embeds: [suggestion],
+        })
+        message.channel.send(`Thank you for your suggestion! We will try to get back to you soon.`)
+    }
 }
 module.exports.help = {
     name: ["suggest", "suggestion"],
