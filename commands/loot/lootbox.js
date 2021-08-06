@@ -41,10 +41,9 @@ function saveLoots(message, gainedLoots) {
                 username = ${connection.escape(message.author.username)}, 
                 loots = ${connection.escape(JSON.stringify(lootlist))},
                 lootboxes = lootboxes - 1`;
-console.log(query)
+
         connection.query(query, function (err, result) {
             if (err) throw err;
-            message.react("✅");
         })
     })
 }
