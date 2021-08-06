@@ -4,15 +4,15 @@ module.exports.loots = {
         name: "Wishlist slot",
         plural: "Wishlist slots",
         description: "An additional slot for your character wishlist.",
-        weight: 10,
+        weight: 15,
         max_amount: 2,
         emote: "🌠"
     },
-    superroll: {
+    super_roll: {
         id: "super_roll",
         name: "Super roll",
         plural: "Super rolls",
-        description: "A super roll have 25% chance of rolling someone from your wishlist.",
+        description: "A super roll has a 25% chance of rolling someone from your wish list. ",
         weight: 50,
         min_amount: 2,
         max_amount: 5,
@@ -28,12 +28,12 @@ module.exports.loots = {
         max_amount: 25,
         emote: "🪙"
     },
-    permaroll: {
+    perma_roll: {
         id: "perma_roll",
         name: "Permanent roll",
         plural: "Permanent rolls",
         description: "An additional roll to spend every hour.",
-        weight: 10,
+        weight: 5,
         max_amount: 1,
         emote: "✨"
     },
