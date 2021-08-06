@@ -9,7 +9,7 @@ module.exports.loots = {
         emote: "🌠"
     },
     superroll: {
-        id: "superroll",
+        id: "super_roll",
         name: "Super roll",
         plural: "Super rolls",
         description: "A super roll have 25% chance of rolling someone from your wishlist.",
@@ -29,7 +29,7 @@ module.exports.loots = {
         emote: "🪙"
     },
     permaroll: {
-        id: "permaroll",
+        id: "perma_roll",
         name: "Permanent roll",
         plural: "Permanent rolls",
         description: "An additional roll to spend every hour.",
