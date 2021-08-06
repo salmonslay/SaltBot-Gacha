@@ -3,7 +3,7 @@ module.exports.loots = {
         id: "wishlist_slot",
         name: "Wishlist slot",
         plural: "Wishlist slots",
-        description: "An additional slot for your character wishlist.",
+        description: "An additional slot for your character wish list.",
         weight: 15,
         max_amount: 2,
         emote: "🌠"
@@ -12,7 +12,7 @@ module.exports.loots = {
         id: "super_roll",
         name: "Super roll",
         plural: "Super rolls",
-        description: "A super roll has a 25% chance of rolling someone from your wish list. ",
+        description: "A super roll has a 25% chance of rolling someone from your wish list.",
         weight: 50,
         min_amount: 2,
         max_amount: 5,
@@ -41,7 +41,7 @@ module.exports.loots = {
         id: "badge",
         name: "Profile badge",
         plural: "Profile badges",
-        description: "A permanent badge on your profile.",
+        description: "A permanent badge for your profile.",
         weight: 1,
         max_amount: 1,
         emote: "🛡️"
