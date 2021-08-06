@@ -85,9 +85,18 @@ module.exports.parseCharacters = function parseCharacters(args) {
         if (result.best) characters.push(result.best);
         else invalids.push(char);
     })
-    
+
     return {
         characters: characters,
         invalids: invalids
     }
+}
+
+module.exports.findWithAttr = function findWithAttr(array, attr, value) {
+    for (var i = 0; i < array.length; i += 1) {
+        if (array[i][attr] === value) {
+            return i;
+        }
+    }
+    return -1;
 }

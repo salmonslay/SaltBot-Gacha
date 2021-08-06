@@ -9,6 +9,7 @@ module.exports.createTables = function createTables() {
         uniqueCharacters MEDIUMINT DEFAULT 0,
         roles TEXT,
         wishlist TEXT,
+        loots TEXT,
         primary key (id)
     )
     `);
