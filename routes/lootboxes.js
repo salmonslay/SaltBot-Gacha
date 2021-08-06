@@ -25,7 +25,7 @@ module.exports.loots = {
         description: "Bonus rolls to use whenever you want to.",
         weight: 200,
         min_amount: 10,
-        max_amount: 30,
+        max_amount: 25,
         emote: "🪙"
     },
     permaroll: {
