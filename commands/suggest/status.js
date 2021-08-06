@@ -29,6 +29,11 @@ module.exports.run = async (bot, message, args) => {
                 })
                 message.react("✅");
 
+                //grant lootbox
+                connection.query(`UPDATE users SET lootboxes = lootboxes + 1 WHERE id = ${suggester.id}`, function (err, result) {
+                    if (err) throw err;
+                });
+
                 //DENY suggestion
             } else if (status == "deny") {
                 var embed = msg.embeds[0]

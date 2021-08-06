@@ -10,6 +10,7 @@ module.exports.createTables = function createTables() {
         roles TEXT,
         wishlist TEXT,
         loots TEXT,
+        lootboxes SMALLINT DEFAULT 1,
         primary key (id)
     )
     `);
