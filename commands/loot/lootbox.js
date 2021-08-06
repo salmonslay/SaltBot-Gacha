@@ -1,12 +1,19 @@
 var lootboxes = require("./../../routes/lootboxes.js");
 module.exports.run = async (bot, message, args) => {
-    var msg = "";
-    var loots = Object.values(lootboxes.getLoot());
-    loots.forEach(loot => {
-        msg += `x${loot.amount} ${loot.emote} **${loot.amount > 1 ? loot.plural : loot.name}!** ${loot.description}\n`
+    connection.query(`SELECT lootboxes FROM users WHERE id = ${message.author.id}`, function (err, result) {
+        if (result.length == 0 || result[0].lootboxes > 0) {
+            var msg = "";
+            var loots = Object.values(lootboxes.getLoot());
+            loots.forEach(loot => {
+                msg += `x${loot.amount} ${loot.emote} **${loot.amount > 1 ? loot.plural : loot.name}!** ${loot.description}\n`
+            })
+            message.channel.send(msg);
+            saveLoots(message, loots);
+        } else {
+            message.channel.send("You don't have any loots! Type **-lootinfo** to see info about loot boxes.")
+        }
     })
-    message.channel.send(msg);
-    saveLoots(message, loots);
+
 }
 
 function saveLoots(message, gainedLoots) {
@@ -28,12 +35,13 @@ function saveLoots(message, gainedLoots) {
         userCache[message.author.id].lootlist = lootlist;
 
         var query = `
-                INSERT INTO users (id, username, characters, loots)
-                VALUES (${message.author.id}, ${connection.escape(message.author.username)}, "[]", ${connection.escape(JSON.stringify(lootlist))}) 
+                INSERT INTO users (id, username, characters, loots, lootboxes)
+                VALUES (${message.author.id}, ${connection.escape(message.author.username)}, "[]", ${connection.escape(JSON.stringify(lootlist))}, 0) 
                 ON DUPLICATE KEY UPDATE 
                 username = ${connection.escape(message.author.username)}, 
-                loots = ${connection.escape(JSON.stringify(lootlist))}`;
-
+                loots = ${connection.escape(JSON.stringify(lootlist))},
+                lootboxes = lootboxes - 1`;
+console.log(query)
         connection.query(query, function (err, result) {
             if (err) throw err;
             message.react("✅");
