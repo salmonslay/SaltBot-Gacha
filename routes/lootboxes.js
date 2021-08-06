@@ -14,6 +14,7 @@ module.exports.loots = {
         plural: "Super rolls",
         description: "A super roll have 25% chance of rolling someone from your wishlist.",
         weight: 50,
+        min_amount: 2,
         max_amount: 5,
         emote: "🪄"
     },
@@ -23,7 +24,8 @@ module.exports.loots = {
         plural: "Roll tokens",
         description: "Bonus rolls to use whenever you want to.",
         weight: 200,
-        max_amount: 20,
+        min_amount: 10,
+        max_amount: 30,
         emote: "🪙"
     },
     permaroll: {
@@ -66,9 +68,10 @@ module.exports.getLoot = function getLoot() {
 
 function getItem() {
     var item = weighted[Math.floor(Math.random() * totalWeight)];
+    var min = item.min_amount ? item.min_amount : 1;
     return {
         id: item.id,
         item: item,
-        amount: Math.floor(Math.random() * item.max_amount) + 1
+        amount: Math.floor(Math.random() * (item.max_amount - min)) + min
     };
 }
