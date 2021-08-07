@@ -44,8 +44,6 @@ module.exports.addWish = function addWish(message, characters, autodel) {
             }
         })
 
-        userCache[message.author.id].wishlist = wishlist;
-
         var query = `
                 INSERT INTO users (id, username, characters, wishlist)
                 VALUES (${message.author.id}, ${connection.escape(message.author.username)}, "[]", ${connection.escape(JSON.stringify(wishlist))}) 
