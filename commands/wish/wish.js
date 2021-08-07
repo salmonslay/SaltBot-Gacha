@@ -23,6 +23,7 @@ module.exports.parseCharacters = function parseCharacters(message, args, autodel
 }
 
 module.exports.addWish = function addWish(message, characters, autodel) {
+
     connection.query(`SELECT id,wishlist FROM users WHERE id = ${message.author.id}`, function (err, result) {
         if (err) throw err;
         var wishlist = [];
@@ -47,10 +48,10 @@ module.exports.addWish = function addWish(message, characters, autodel) {
 
         connection.query(query, function (err, result) {
             if (err) throw err;
+        });
 
-            if (autodel) message.delete();
-            else message.react("✅");
-        })
+        if (autodel) message.delete();
+        else message.react("✅");
     })
 }
 module.exports.help = {
