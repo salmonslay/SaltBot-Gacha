@@ -7,7 +7,7 @@ module.exports.parseCharacters = function parseCharacters(message, args, autodel
     if (args.length > 0) {
         var result = utils.parseCharacters(args);
         if (result.characters.length > 0 && result.invalids.length == 0) this.addWish(message, result.characters, autodel);
-        else message.channel.send(`${message.author.toString()}, character **${result.invalids[0]}** could not found.`);
+        else message.channel.send(`${message.author.toString()}, character **${result.invalids[0]}** could not be found.`);
         //no args found, send help
     } else {
         var embed = new Discord.MessageEmbed()
@@ -27,14 +27,21 @@ module.exports.addWish = function addWish(message, characters, autodel) {
     connection.query(`SELECT id,wishlist FROM users WHERE id = ${message.author.id}`, function (err, result) {
         if (err) throw err;
         var wishlist = [];
+        var full = false;
         //wishlist already created
         if (result.length > 0 && result[0].wishlist != null) wishlist = JSON.parse(result[0].wishlist);
 
         characters.forEach(char => {
-            if (wishlist.length < config.counts.wishlistSlots && !wishlist.some(wl => wl.id === char.id)) wishlist.push({
-                id: char.id,
-                lock: false
-            })
+            if (wishlist.length < config.counts.wishlistSlots) {
+                if (!wishlist.some(wl => wl.id === char.id)) wishlist.push({
+                    id: char.id,
+                    lock: false
+                })
+            } else {
+                if (!full)
+                    message.channel.send(`Your wishlist is full! You need to remove characters with **-wishremove <character(s)>** before you can add new ones.`);
+                full = true;
+            }
         })
 
         userCache[message.author.id].wishlist = wishlist;
@@ -51,7 +58,7 @@ module.exports.addWish = function addWish(message, characters, autodel) {
         });
 
         if (autodel) message.delete();
-        else message.react("✅");
+        else message.react(full ? "🚫" : "✅");
     })
 }
 module.exports.help = {
