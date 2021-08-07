@@ -1,14 +1,17 @@
 var lootboxes = require("./../../routes/lootboxes.js");
 module.exports.run = async (bot, message, args) => {
-    connection.query(`SELECT lootboxes FROM users WHERE id = ${message.author.id}`, function (err, result) {
+    connection.query(`SELECT loots,lootboxes FROM users WHERE id = ${message.author.id}`, function (err, result) {
         if (result.length == 0 || result[0].lootboxes > 0) {
             var msg = "";
-            var loots = Object.values(lootboxes.getLoot());
-            loots.forEach(loot => {
+            var newLoot = Object.values(lootboxes.getLoot());
+            newLoot.forEach(loot => {
                 msg += `x${loot.amount} ${loot.emote} **${loot.amount > 1 ? loot.plural : loot.name}!** ${loot.description}\n`
             })
             message.channel.send(msg);
-            saveLoots(message, loots);
+
+            var myLoot = result.length == 0 ? [] : JSON.parse(result[0].loots);
+            var lootCount = result.length == 0 ? 0 : result[0].lootboxes - 1;
+            saveLoots(message, newLoot, myLoot, lootCount);
         } else {
             message.channel.send("You don't have any loots! Type **-lootinfo** to see info about loot boxes.")
         }
@@ -16,35 +19,29 @@ module.exports.run = async (bot, message, args) => {
 
 }
 
-function saveLoots(message, gainedLoots) {
-    connection.query(`SELECT id,loots FROM users WHERE id = ${message.author.id}`, function (err, result) {
-        if (err) throw err;
-        var lootlist = [];
-        //wishlist already created
-        if (result.length > 0 && result[0].loots != null) lootlist = JSON.parse(result[0].loots);
+function saveLoots(message, gainedLoots, myLoot, lootCount) {
+    gainedLoots.forEach(loot => {
+        if (!myLoot.some(l => l.id === loot.id))
+            myLoot.push({
+                id: loot.id,
+                amount: loot.amount
+            })
+        else myLoot[utils.findWithAttr(myLoot, "id", loot.id)].amount += loot.amount;
+    })
+    if (!userCache[message.author.id]) userCache[message.author.id] = {};
+    userCache[message.author.id].lootlist = myLoot;
+    userCache[message.author.id].loots = lootCount;
 
-        gainedLoots.forEach(loot => {
-            if (!lootlist.some(l => l.id === loot.id))
-                lootlist.push({
-                    id: loot.id,
-                    amount: loot.amount
-                })
-            else lootlist[utils.findWithAttr(lootlist, "id", loot.id)].amount += loot.amount;
-        })
-
-        userCache[message.author.id].lootlist = lootlist;
-
-        var query = `
+    var query = `
                 INSERT INTO users (id, username, characters, loots, lootboxes)
-                VALUES (${message.author.id}, ${connection.escape(message.author.username)}, "[]", ${connection.escape(JSON.stringify(lootlist))}, 0) 
+                VALUES (${message.author.id}, ${connection.escape(message.author.username)}, "[]", ${connection.escape(JSON.stringify(myLoot))}, 0) 
                 ON DUPLICATE KEY UPDATE 
                 username = ${connection.escape(message.author.username)}, 
-                loots = ${connection.escape(JSON.stringify(lootlist))},
-                lootboxes = lootboxes - 1`;
+                loots = ${connection.escape(JSON.stringify(myLoot))},
+                lootboxes = ${lootCount}`;
 
-        connection.query(query, function (err, result) {
-            if (err) throw err;
-        })
+    connection.query(query, function (err, result) {
+        if (err) throw err;
     })
 }
 
