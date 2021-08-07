@@ -13,7 +13,7 @@ module.exports.parseCharacters = function parseCharacters(message, args, autodel
         var embed = new Discord.MessageEmbed()
             .setTitle("Wishlisting")
             .setDescription(`**Syntax**: -wish <character(s)>\n
-        Wishlisted characters will increase your odds of rolling them.\nIf you want to add multiple characters, separate them with a $.\n
+        Adding characters to your wish list will increase your odds of rolling them.\nIf you want to add multiple characters, separate them with a $.\n
         **-wishlist [user]** will show your wishlist\n**-wishremove <character(s)>** will remove a character from your wishlist\n**-wishd <character(s)>** will wishlist a character and remove the message\n**-wishpurge** will remove all wishlisted characters that you already own`)
 
         message.channel.send({
