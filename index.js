@@ -2,6 +2,7 @@ require('dotenv').config();
 Discord = require("discord.js");
 config = require("./config.json");
 utils = require("./routes/utils.js");
+lootManager = require("./routes/lootboxes.js");
 bot = new Discord.Client({
     intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'DIRECT_MESSAGES']
 });
@@ -70,12 +71,13 @@ connection.connect(function (e) {
     });
 
     //add roles to userCache
-    connection.query(`SELECT id,roles,loots,lootboxes FROM users`, function (err, result) {
+    connection.query(`SELECT id,roles,loots,lootboxes,wishlist FROM users`, function (err, result) {
         userCache = result.reduce(
             (obj, item) => Object.assign(obj, {
                 [item.id.toString()]: {
                     roles: item.roles ? JSON.parse(item.roles) : [],
                     loots: item.loots ? JSON.parse(item.loots) : [],
+                    wishlist: item.wishlist ? JSON.parse(item.wishlist) : [],
                     lootboxes: item.lootboxes
                 }
             }), {});
@@ -91,7 +93,6 @@ glob("./commands/**/*.js", function (err, files) {
         let props = require(f)
         console.log(`File ${f.replace("./commands/", "")} loaded!`);
         props.help.name.forEach(name => bot.commands.set(name, props))
-
     });
 })
 

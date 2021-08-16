@@ -1,4 +1,3 @@
-var lootboxes = require("./../../routes/lootboxes.js");
 module.exports.run = async (bot, message, args) => {
     let target = message.mentions.users.first() || message.author;
     connection.query(`SELECT id,loots,lootboxes FROM users WHERE id = ${target.id}`, function (err, result) {
@@ -11,7 +10,7 @@ module.exports.run = async (bot, message, args) => {
 
         var desc = `Loot boxes saved: **${myLootCount}**\n\n`;
         myLoot.forEach(loot => {
-            desc += `${lootboxes.loots[loot.id].emote} ${lootboxes.loots[loot.id].plural}: **${loot.amount}**\n`
+            desc += `${lootManager.loots[loot.id].emote} ${lootManager.loots[loot.id].plural}: **${loot.amount}**\n`
         })
 
         var embed = new Discord.MessageEmbed()
