@@ -16,17 +16,25 @@ module.exports.getBadges = function getBadges(id) {
 }
 
 //get a random character with wishlist odds
-module.exports.generateCharacter = function generateCharacter(user) {
+module.exports.generateCharacter = function generateCharacter(user, isSuper = false) {
     if (userCache[user.id]) {
-        var wishlist = userCache[user.id].wishlist;
-        if (wishlist.length / gacha.characters.length * config.counts.wishlistOdds > Math.random()) {
+        let wishlist = userCache[user.id].wishlist;
+        let wishOdds = isSuper ? 0.25 : wishlist.length / gacha.characters.length * config.counts.wishlistOdds > Math.random()
+
+        //return roll with increased odds
+        if (wishOdds > Math.random() && wishlist.length > 0) {
             var wishedCharacter = gacha.characterMap[wishlist[Math.floor(Math.random() * wishlist.length)].id];
-            if (wishedCharacter) {}
-            return wishedCharacter;
+            return {
+                character: wishedCharacter,
+                isSuper: true
+            }
         }
     }
 
-    return gacha.characters[Math.floor(Math.random() * gacha.characters.length)];
+    return {
+        character: gacha.characters[Math.floor(Math.random() * gacha.characters.length)],
+        isSuper: false
+    }
 }
 
 module.exports.findCharacter = function findCharacter(query) {

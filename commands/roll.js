@@ -29,10 +29,12 @@ module.exports.run = async (bot, message, args) => {
     }
 }
 
-var roll = function (message, left, character) {
+var roll = function (message, left, characterData) {
+    var character = characterData.character;
+    var isSuper = characterData.isSuper;
     var characterEmbed = new Discord.MessageEmbed()
-        .setColor("GOLD")
-        .setTitle(character.name)
+        .setColor(isSuper ? "GOLD" : "GREEN")
+        .setTitle(`${(isSuper ? lootManager.loots["super_roll"].emote : "")} ${character.name}`)
         .setDescription(character.source)
         .setImage(character.image)
         .setFooter("React to claim! " + left)
