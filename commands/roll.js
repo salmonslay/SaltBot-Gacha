@@ -34,7 +34,7 @@ var roll = function (message, left, characterData) {
     var isSuper = characterData.isSuper;
     var characterEmbed = new Discord.MessageEmbed()
         .setColor(isSuper ? "GOLD" : "GREEN")
-        .setTitle(`${(isSuper ? lootManager.loots["super_roll"].emote : "")} ${character.name}`)
+        .setTitle(`${(isSuper ? LootManager.loots["super_roll"].emote : "")} ${character.name}`)
         .setDescription(character.source)
         .setImage(character.image)
         .setFooter("React to claim! " + left)

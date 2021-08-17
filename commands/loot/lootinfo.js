@@ -4,7 +4,7 @@ module.exports.run = async (bot, message, args) => {
         .setDescription("Loots can be obtained from voting on the bot, suggesting characters, and daily with premium. They can be opened with the **-loot** command in any server.\n\u200B")
 
 
-    Object.values(lootManager.loots).forEach((loot) => {
+    Object.values(LootManager.loots).forEach((loot) => {
         embed.addField(`${loot.emote} ${loot.name}`, loot.description)
     })
 

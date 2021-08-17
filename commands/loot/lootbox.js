@@ -1,9 +1,8 @@
-var lootboxes = require("./../../routes/lootboxes.js");
 module.exports.run = async (bot, message, args) => {
     connection.query(`SELECT loots,lootboxes FROM users WHERE id = ${message.author.id}`, function (err, result) {
         if (result.length == 0 || result[0].lootboxes > 0) {
             var msg = "";
-            var newLoot = Object.values(lootboxes.getLoot());
+            var newLoot = Object.values(LootManager.getLoot());
             newLoot.forEach(loot => {
                 msg += `x${loot.amount} ${loot.emote} **${loot.amount > 1 ? loot.plural : loot.name}!** ${loot.description}\n`
             })

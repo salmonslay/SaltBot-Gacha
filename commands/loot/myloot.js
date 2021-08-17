@@ -10,7 +10,7 @@ module.exports.run = async (bot, message, args) => {
 
         var desc = `Loot boxes saved: **${myLootCount}**\n\n`;
         myLoot.forEach(loot => {
-            desc += `${lootManager.loots[loot.id].emote} ${lootManager.loots[loot.id].plural}: **${loot.amount}**\n`
+            desc += `${LootManager.loots[loot.id].emote} ${LootManager.loots[loot.id].plural}: **${loot.amount}**\n`
         })
 
         var embed = new Discord.MessageEmbed()
