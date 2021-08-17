@@ -2,7 +2,8 @@ require('dotenv').config();
 Discord = require("discord.js");
 config = require("./config.json");
 utils = require("./routes/utils.js");
-lootManager = require("./routes/lootboxes.js");
+LootManager = require("./routes/lootboxes.js");
+UserManager = require("./routes/usermanager.js");
 bot = new Discord.Client({
     intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'DIRECT_MESSAGE_REACTIONS', 'DIRECT_MESSAGES']
 });
