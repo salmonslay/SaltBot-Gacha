@@ -77,9 +77,7 @@ connection.connect(function (e) {
             (obj, item) => Object.assign(obj, {
                 [item.id.toString()]: {
                     roles: item.roles ? JSON.parse(item.roles) : [],
-                    loots: item.loots ? JSON.parse(item.loots) : [],
                     wishlist: item.wishlist ? JSON.parse(item.wishlist) : [],
-                    lootboxes: item.lootboxes
                 }
             }), {});
     })

@@ -1,6 +1,6 @@
 module.exports.run = async (bot, message, args) => {
     let target = message.mentions.users.first() || message.author;
-    UserManager.getLoots(target.id).then(res => {
+    LootManager.getUserLoot(target.id).then(res => {
         var desc = `Loot boxes saved: **${res.count}**\n\n`;
         res.loot.forEach(loot => {
             desc += `${LootManager.loots[loot.id].emote} ${LootManager.loots[loot.id].plural}: **${loot.amount}**\n`
