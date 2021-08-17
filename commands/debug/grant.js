@@ -9,6 +9,8 @@ module.exports.run = async (bot, message, args) => {
         if (item == "loot") {
             connection.query(`UPDATE users SET lootboxes = lootboxes + ${count} WHERE id = ${id}`, function (err, result) {
                 if (err) throw err;
+                //force cache update
+                LootManager.getUserLoot(id, true);
                 message.react("✅");
             });
         }
