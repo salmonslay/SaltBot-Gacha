@@ -13,7 +13,6 @@ function sendChar(message, character) {
         .setColor("#a7eec9")
         .setTitle(character.name)
         .setDescription(`${character.source}\nClaim Rank: #${character.rank}`)
-        .setURL(character.characterPage)
         .setImage(character.image)
 
     message.channel.send({
